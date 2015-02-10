@@ -1,12 +1,18 @@
 #include "pgm.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 /* construction de l'histogramme de l'image d'entrée */
 
-unsigned char** hist( unsigned char** entree, int nl, int nc){
-    unsigned char** histogramme = alloue_image(2,256);
-    for(i=0; i<255; i++){
-	     histogramme[0][i] = i;
-	     hitsogramme[1][i] = 0;
+int** hist( unsigned char** entree, int nl, int nc){
+    int ** histogramme = calloc(2,sizeof(int*));
+    histogramme[0] = calloc(256,sizeof(int));
+    histogramme[1] = calloc(256,sizeof(int));
+    int i;
+    int j;
+    for(i=0; i<256; i++){
+	histogramme[0][i] = i;
+	histogramme[1][i] = 0;
     }
     
 
@@ -17,18 +23,25 @@ unsigned char** hist( unsigned char** entree, int nl, int nc){
     return histogramme;
 }
 
-void ecriture_histogramme(unsigned char** hist,char** sortie){
-
+void ecriture_histogramme(int** hist,char** sortie){
+    FILE* fichier = fopen(*sortie, "w");
+    int i;
+    for(i = 0 ; i < 256 ; i ++){
+	fprintf(fichier,"%i ", hist[0][i]);
+	fprintf(fichier,"%i \n" ,hist[1][i]);
+    }
+    fclose(fichier);
 }
 
 
 /* ecriture de l'histogramme dans un fichier texte*/
-main (int ac, char **av){
+int main (int ac, char **av){
     int nb,nl,nc, oldnl,oldnc;
-    unsigned char ** hist_im=NULL,im1=NULL;
+    int **hist_im = NULL;
+    unsigned char **im1 = NULL;
     if (ac < 2) {printf("Usage : %s entree sortie \n",av[0]); exit(1); }
     im1=lectureimagepgm(av[1],&nl,&nc);
     if (im1==NULL)  { puts("Lecture image impossible"); exit(1); }
     hist_im = hist(im1,nl,nc);
-    ecriture_histogramme(hist_im,av[2]);
+    ecriture_histogramme(hist_im,&av[2]);
 }
