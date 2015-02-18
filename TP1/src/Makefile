@@ -5,7 +5,13 @@ essai1: essai1.o pgm.o
 	gcc $(LDFLAGS)  $^  -o $@
 
 essai2: essai2.o pgm.o fft.o
-	gcc $(LDFLAGS)  $^  -o $@
+	gcc $^  -o $@ $(LDFLAGS)
+
+etirement: etirement.o pgm.o fft.o
+	gcc $^  -o $@ $(LDFLAGS)  
+
+filtrageRetinien: filtrageRetinien.o pgm.o fft.o
+	gcc $^  -o $@ $(LDFLAGS)
 
 %.o:%.c
 	gcc $(CFLAGS) $<
