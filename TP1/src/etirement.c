@@ -55,5 +55,6 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
   im2=etire(im2,im1,nl,nc);
 	/* Sauvegarde dans un fichier dont le nom est passe sur la ligne de commande */
   ecritureimagepgm(av[2],im2,nl,nc);
+  //faire tous les free
 
 }

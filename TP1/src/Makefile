@@ -10,8 +10,17 @@ essai2: essai2.o pgm.o fft.o
 etirement: etirement.o pgm.o fft.o
 	gcc $^  -o $@ $(LDFLAGS)  
 
+egalisation: egalisation.o pgm.o histogramme.o fft.o
+	gcc $^ -o $@ $(LDFLAGS)
+
 filtrageRetinien: filtrageRetinien.o pgm.o fft.o
+	gcc $^  -o $@ $(LDFLAGS)
+
+create_histogramme: create_histogramme.o histogramme.o pgm.o fft.o 
 	gcc $^  -o $@ $(LDFLAGS)
 
 %.o:%.c
 	gcc $(CFLAGS) $<
+
+clean: 
+	rm *.o
