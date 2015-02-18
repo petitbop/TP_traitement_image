@@ -12,8 +12,8 @@ unsigned char** filtrageRetinien(unsigned char** sortie, unsigned char** entree,
     int j;
     int n = 3; // taille du voisinage
     float alpha = 0.5;
-    unsigned char entreeMoy = moy(nl, nc, entree);
-    unsigned char mij = 0;
+    int entreeMoy = moy(nl, nc, entree);
+    int mij = 0;
 
     for(i = 0; i < nl; i++){
       for(j = 0; j < nc; j++){
@@ -24,10 +24,10 @@ unsigned char** filtrageRetinien(unsigned char** sortie, unsigned char** entree,
     return sortie;
 }
 
-unsigned char moyVoisin(int i, int j, int n, int nl, int nc, unsigned char** entree){
+int moyVoisin(int i, int j, int n, int nl, int nc, unsigned char** entree){
 
-  unsigned char mij = 0;
-  unsigned char tmp = 0;
+  int mij = 0;
+  int tmp = 0;
 
   for(int k = -n; k <= n; k++){
     for(int l = -n; l <= n; l++){
@@ -37,21 +37,21 @@ unsigned char moyVoisin(int i, int j, int n, int nl, int nc, unsigned char** ent
       }
     }
   }
-  mij = 1/(pow(2*n+1, 2))*tmp;
+  mij = tmp/(pow(2*n+1, 2));
   return mij;
 }
 
-unsigned char moy(int nl, int nc, unsigned char** entree){
+int moy(int nl, int nc, unsigned char** entree){
 
-  unsigned char entreeMoy = 0;
-  unsigned char tmp = 0;
+  int entreeMoy = 0;
+  int tmp = 0;
 
   for(int l = 0; l <= nc - 1; l++){
     for(int k = 0; k <= nl - 1; k++){
       tmp += entree[k][l];
     }
   }
-  entreeMoy = 1/(nl * nc) * tmp;
+  entreeMoy = tmp/(nl * nc);
   return entreeMoy;
 }
 
