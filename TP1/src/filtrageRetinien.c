@@ -10,7 +10,7 @@ unsigned char** filtrageRetinien(unsigned char** sortie, unsigned char** entree,
     if (sortie==NULL) sortie=alloue_image(nl,nc);
     int i; // indices permettant le parcours des matrices
     int j;
-    int n = 3; // taille du voisinage
+    int n = 5; // taille du voisinage
     float alpha = 0.5;
     int entreeMoy = moy(nl, nc, entree);
     int mij = 0;
