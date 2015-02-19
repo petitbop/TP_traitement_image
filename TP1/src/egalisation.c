@@ -26,10 +26,18 @@ unsigned char** egalise( unsigned char** sortie,  unsigned char** entree, int nl
 		pixel_y = rand()%nc;
 		if(hist_cumul(hists, sortie[pixel_x][pixel_y]) >= nc*nl/256){
 			if((double)rand()/(double)RAND_MAX < 0.5){
-				sortie[pixel_x][pixel_y]++;
+				if(sortie[pixel_x][pixel_y] < 255){
+					sortie[pixel_x][pixel_y]++;
+					hists[1][sortie[pixel_x][pixel_y]]--;
+					hists[1][sortie[pixel_x][pixel_y] + 1]++;
+				}
 			}
 			else{
-				sortie[pixel_x][pixel_y]--;
+				if(sortie[pixel_x][pixel_y] > 0){
+					sortie[pixel_x][pixel_y]--;
+					hists[1][sortie[pixel_x][pixel_y]]--;
+				       	hists[1][sortie[pixel_x][pixel_y] - 1]++;
+				}
 			}
 		}
 			

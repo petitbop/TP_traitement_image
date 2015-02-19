@@ -19,8 +19,27 @@ filtrageRetinien: filtrageRetinien.o pgm.o fft.o
 create_histogramme: create_histogramme.o histogramme.o pgm.o fft.o 
 	gcc $^  -o $@ $(LDFLAGS)
 
+contraste: contraste.o pgm.o fft.o
+	gcc $^  -o $@ $(LDFLAGS)
+
 %.o:%.c
 	gcc $(CFLAGS) $<
 
+compare: etirement egalisation filtrageRetinien create_histogramme contraste
+	./etirement ../aquitain.pgm  etire_aquitain.pgm
+	./etirement ../couchersoleil.pgm etire_couchersoleil.pgm 
+	./etirement ../muscle.pgm  etire_muscle.pgm
+	./etirement ../pont.pgm etire_pont.pgm
+	./egalisation ../aquitain.pgm  egal_aquitain.pgm
+	./egalisation ../couchersoleil.pgm egal_couchersoleil.pgm 
+	./egalisation ../muscle.pgm egal_muscle.pgm 
+	./egalisation ../pont.pgm egal_pont.pgm
+	./filtrageRetinien ../aquitain.pgm fil_aquitain.pgm
+	./filtrageRetinien ../couchersoleil.pgm fil_couchersoleil.pgm
+	./filtrageRetinien ../muscle.pgm fil_muscle.pgm 
+	./filtrageRetinien ../pont.pgm fil_pont.pgm
+
 clean: 
 	rm *.o
+	rm *.pgm
+	rm *.txt
