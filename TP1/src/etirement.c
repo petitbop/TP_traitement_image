@@ -7,20 +7,24 @@ unsigned char** etire( unsigned char** sortie,  unsigned char** entree, int nl, 
     if (sortie==NULL) sortie=alloue_image(nl,nc);
     int i;
     int j;
-    int mine = min(entree);
-    int maxe = max(entree);
-    for(i=0; i<nl; i++)
-	for(j=0; j<nc; j++)
-	    sortie[i][j]=255*(entree[i][j]-mine)/(maxe - mine);
+    int mine = min(entree,nl,nc);
+    int maxe = max(entree,nl,nc);
+    printf("max : %i" , maxe);
+    printf("min : %i" , mine);
+    for(i=0; i<nl; i++){
+	    for(j=0; j<nc; j++){
+		     sortie[i][j]=255*(entree[i][j]-mine)/(maxe - mine);
+	    }
+    }
     return sortie;
 }
 
-unsigned char min(unsigned char** entree){
-    char min = entree[0][0];
+int min(unsigned char** entree, int nl, int nc){
+    int min = entree[1][0];
     int i;
     int j;
-    for(i = 0 ; i < 255 ; i++){
-	for(j = 0 ; j < 255 ; j++){
+    for(i = 0 ; i < nl ; i++){
+	for(j = 0 ; j < nc ; j++){
 	    if(min > entree[i][j])
 		min = entree[i][j];
 	}
@@ -29,12 +33,12 @@ unsigned char min(unsigned char** entree){
 }
 
 
-unsigned char max(unsigned char** entree){
-    char max = entree[0][0];
+int max(unsigned char** entree, int nl , int nc){
+    int max = entree[1][0];
     int i;
     int j;
-    for(i = 0 ; i < 255 ; i++){
-	for(j = 0 ; j < 255 ; j++){
+    for(i = 0 ; i < nl ; i++){
+	for(j = 0 ; j < nc ; j++){
 	    if(max < entree[i][j])
 		max = entree[i][j];
 	}

@@ -3,9 +3,9 @@
 
 unsigned char** etire( unsigned char** sortie,  unsigned char** entree, int nl, int nc);
 
-unsigned char min(unsigned char** entree);
+int min(unsigned char** entree, int nl, int nc);
 
-unsigned char max(unsigned char** entree);
+int max(unsigned char** entree, int nl, int nc);
 
 
 #endif

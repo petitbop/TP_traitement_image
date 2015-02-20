@@ -38,6 +38,42 @@ compare: etirement egalisation filtrageRetinien create_histogramme contraste
 	./filtrageRetinien ../couchersoleil.pgm fil_couchersoleil.pgm
 	./filtrageRetinien ../muscle.pgm fil_muscle.pgm 
 	./filtrageRetinien ../pont.pgm fil_pont.pgm
+	./create_histogramme ../aquitain.pgm hist_aquitain.txt 
+	./create_histogramme ../couchersoleil.pgm hist_couchersoleil.txt 
+	./create_histogramme ../muscle.pgm hist_muscle.txt 
+	./create_histogramme ../pont.pgm hist_pont.txt
+	echo "AQUITAIN \n" 
+	./contraste ../aquitain.pgm
+	echo "etirement \n" 
+	./contraste etire_aquitain.pgm
+	echo "egalisation \n"
+	./contraste egal_aquitain.pgm
+	echo "filtrage retinien \n"
+	./contraste fil_aquitain.pgm
+	echo "MUSCLE \n" 
+	./contraste ../muscle.pgm
+	echo "etirement \n" 
+	./contraste etire_muscle.pgm
+	echo "egalisation \n"
+	./contraste egal_muscle.pgm
+	echo "filtrage retinien \n"
+	./contraste fil_muscle.pgm
+	echo "PONT \n" 
+	./contraste ../pont.pgm
+	echo "etirement \n" 
+	./contraste etire_pont.pgm
+	echo "egalisation \n"
+	./contraste egal_pont.pgm
+	echo "filtrage retinien \n"
+	./contraste fil_pont.pgm
+	echo "COUCHERSOLEIL \n" 
+	./contraste ../couchersoleil.pgm
+	echo "etirement \n" 
+	./contraste etire_couchersoleil.pgm
+	echo "egalisation \n"
+	./contraste egal_couchersoleil.pgm
+	echo "filtrage retinien \n"
+	./contraste fil_couchersoleil.pgm
 
 clean: 
 	rm *.o
