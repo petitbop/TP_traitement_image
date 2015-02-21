@@ -50,8 +50,7 @@ int minloc(int i, int j, int n, int nl, int nc, unsigned char** entree){
 
 int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le nom du resultat . */
   int nb,nl,nc, oldnl,oldnc;
-  unsigned char **im2=NULL,** im1=NULL;
-  double** im4,** im5, ** im6, ** im7, **im8, **im9,**im10;
+  unsigned char ** im1=NULL;
   double contr;
   if (ac < 1) {printf("Usage : %s entree \n",av[0]); exit(1); }
 	/* Lecture d'une image pgm dont le nom est passe sur la ligne de commande */
@@ -59,5 +58,6 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
   if (im1==NULL)  { puts("Lecture image impossible"); exit(1); }
   contr = contraste(im1,nl,nc);
   printf("contraste de l'image : %f \n", contr);
-
+  free(*im1);
+  free(im1);
 }

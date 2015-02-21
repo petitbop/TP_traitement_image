@@ -58,9 +58,8 @@ int moy(int nl, int nc, unsigned char** entree){
 
 
 int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le nom du resultat . */
-  int nb,nl,nc, oldnl,oldnc;
+	int nb,nl,nc;
   unsigned char **im2=NULL,** im1=NULL;
-  double** im4,** im5, ** im6, ** im7, **im8, **im9,**im10;
   
   if (ac < 2) {printf("Usage : %s entree sortie \n",av[0]); exit(1); }
 	/* Lecture d'une image pgm dont le nom est passe sur la ligne de commande */
@@ -70,5 +69,9 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
   im2=filtrageRetinien(im2,im1,nl,nc);
 	/* Sauvegarde dans un fichier dont le nom est passe sur la ligne de commande */
   ecritureimagepgm(av[2],im2,nl,nc);
+  free(*im1);
+  free(im1);
+  free(*im2);
+  free(im2);
 
 }
