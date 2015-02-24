@@ -1,0 +1,117 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsfonts, amsmath, amssymb, amstext, latexsym}
+\usepackage{graphicx, epsfig}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{exscale}
+\usepackage{amsbsy}
+\usepackage{amsopn}
+\usepackage{fancyhdr}
+\usepackage{amsmath,amssymb}
+%\usepackage{listings}
+%\usepackage{textcomp}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\noi}{\noindent}
+\newcommand{\dsp}{\displaystyle}
+\newcommand{\iieme}{i^{\footnotesize \mbox{ème}}}
+\newcommand{\jieme}{j^{\footnotesize \mbox{ème}}}
+\newcommand{\jmunieme}{(j-1)^{\footnotesize \mbox{ème}}}
+\newcommand{\dsum}[2]{\sum\limits_{#1}^{#2}}
+\newcommand{\dprod}[2]{\prod\limits_{#1}^{#2}}
+
+\def\ligne#1{\leaders\hrule height #1\linethickness \hfill}
+% utilisation :
+% \ligne{5}
+
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+\numberwithin{equation}{section}
+
+
+\textheight 25cm
+\textwidth 16cm
+\oddsidemargin 0cm
+\evensidemargin 0cm
+\topmargin 0cm
+\hoffset -0mm
+\voffset -20mm
+
+
+\pagestyle{plain}
+
+\begin{document}
+
+\baselineskip7mm
+
+\noi ENSIMAG $2^{\footnotesize \mbox{ème}}$ année   \hfill Fevrier 2015
+
+
+\vspace{1cm}
+
+
+\begin{center}
+{\Large \bf Traitement d'images\\ TP 1 \\ \texttt{Garcia Maxime, Palisse Benjamin, Petitbon Pierre}}
+\end{center}
+
+\vspace{5mm}
+
+
+\section{Etirement}
+
+\textbf{étude qualitative}: La $figure 1$ présente l'image aquitain telle quelle était initialement, tandis que la $figure 2$ est l'image aquitain après étirement. On constate que l'image initiale, étant dans des tons très sombre, ne comportait pas de pixel blanc, alors que l'image obtenu contient des pixels ayant tous les niveaux de gris. Cela est cohérent avec l'idée d'étirer l'histogramme: toute la gamme des niveaux de gris est utilisé. Le contraste visuel est augmenté.\\
+
+\textbf{étude quantitative}: Le tableau suivant expose la valeur du contraste pour $4$ images avant et après l'étirement d'histogramme.\\
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+ & aquitain & muscle & pont & coucherdesoleil\\
+\hline
+image initiale & 0.243517 & 0.371365 & 0.243040 & 0.326334\\
+\hline
+image étirée & 0.486989 & 0.591522 & 0.262942 & 0.326334 \\
+\hline
+\end{tabular}
+
+On a bien le résultat escompté pour aquitain: le contraste a double. De même pour muscle. Cependant, les images pont et coucherdesoleil faisant déjà intervenir presque toutes les gammes de gris, l'image obtenu n'est pas très différente de l'originale. Le contraste ne change pas du tout pour coucherdesoleil.
+
+\textbf{conclusion}: La méthode a un bon rendu visuel pour les images utilisant peu de gamme de gris, c'est-à-dire avec un histogramme ayant un petit support. Pour les images ayant déjà une répartition des pixels équilibrée en niveau de gris, l'étirement n'est pas utile.
+
+\section{Egalisation}
+
+\textbf{étude qualitative}: Les images obtenus après égalisation d'histogramme ont un contraste supérieur. Le constat est flagrant avec l'image égal\_aquitain présenté en figure 3. Pour les autres images comme pont ou coucherdesoleil, une tâche blanche apparait sur l'image. Les contours des maisons de l'image pont sont entourés de pixel gris foncés contrairement à l'image originale. Ce phénomène n'est pas souhaitable. 
+
+\textbf{étude quantitative}: Le tableau suivant expose la valeur du contraste pour $4$ images avant et après l'égalisation d'histogramme.\\
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+ & aquitain & muscle & pont & coucherdesoleil\\
+\hline
+image initiale & 0.243517 & 0.371365 & 0.243040 & 0.326334\\
+\hline
+image égalisée & 0.658175 & 0.585082 & 0.350781 &  0.353109\\
+\hline
+\end{tabular}\\
+
+Avec cette méthode, le contraste est systématiquement augmenté, même pour l'image coucherdesoleil.
+
+!!!!Quid de l'amélioration proposé en remarque lol?
+\section{Filtrage Rétinien}
+
+\textbf{étude qualitative}: Les images obtenus sont dans des tons plus lumineux, ce qui s'explique par le fait que le filtrage prend en compte les valeurs des pixels voisins pour calculer le niveau de gris d'un pixel donné, et que pour calculer les valeurs des pixels au bord, le programme considère qu'elle est entourée de pixel blanc. Ainsi l'image globale obtenue a plus de blanc. Cependant, le contraste ne semble pas augmenter. Cela est particulièrement visible sur l'image aquitain qui possède initialement un contraste très faible et a beaucoup de pixel noir, et qui après passage du filtre rétinien possède des pixels plus clairs mais toujours dans les mêmes tons. Le niveau de détail de l'image semble être améliorer avec ce filtre néanmoins, ce qui est logique vu que l'on prend en compte les pixels voisins pour calculer la valeur d'un pixel.
+
+\textbf{étude quantitative}: Le tableau suivant expose la valeur du contraste pour $4$ images avant et après le filtrage rétinien.\\
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+ & aquitain & muscle & pont & coucherdesoleil\\
+\hline
+image initiale & 0.243517 & 0.371365 & 0.243040 & 0.326334\\
+\hline
+image filtrée & 0.141756 & 0.226472 & 0.179948 & 0.252539 \\
+\hline
+\end{tabular}\\
+
+Effectivement, le contraste n'est pas augmenté et est même diminué par cette méthode.
+
+
+
+\end{document}	
