@@ -16,38 +16,39 @@ unsigned char** egalise( unsigned char** sortie,  unsigned char** entree, int nl
 	}
 	/*amélioration*/
 	srand (time (NULL));
-	int nb_iteration = 1000000;
+	int nb_iteration = 100000000;
 	int k;
 	int pixel_x;
 	int pixel_y;
 	int **hists = hist(sortie, nl, nc);
 	for(k = 0 ; k < nb_iteration ; k++){
-		pixel_x = rand()%nl;
-		pixel_y = rand()%nc;
-		if(hist_cumul(hists, sortie[pixel_x][pixel_y]) >= nc*nl/256){
-			if((double)rand()/(double)RAND_MAX < 0.5){
-				if(sortie[pixel_x][pixel_y] < 255){
-					sortie[pixel_x][pixel_y]++;
-					hists[1][sortie[pixel_x][pixel_y]]--;
-					hists[1][sortie[pixel_x][pixel_y] + 1]++;
-				}
-			}
-			else{
-				if(sortie[pixel_x][pixel_y] > 0){
-					sortie[pixel_x][pixel_y]--;
-					hists[1][sortie[pixel_x][pixel_y]]--;
-				       	hists[1][sortie[pixel_x][pixel_y] - 1]++;
-				}
-			}
+	    pixel_x = rand()%nl;
+	    pixel_y = rand()%nc;
+	    if(hists[1][sortie[pixel_x][pixel_y]] > nc*nl/256){
+		hists[1][sortie[pixel_x][pixel_y]]--;
+		if(sortie[pixel_x][pixel_y] == 255){
+		    sortie[pixel_x][pixel_y]--;
+		    hists[1][sortie[pixel_x][pixel_y]]++;
 		}
+		else if (sortie[pixel_x][pixel_y] == 0){
+		    sortie[pixel_x][pixel_y]++;
+		    hists[1][sortie[pixel_x][pixel_y]]++;
+		}
+		else{
+		    if(rand()%2 == 0){
+			sortie[pixel_x][pixel_y]++;
+			hists[1][sortie[pixel_x][pixel_y]]++;
+		    }
+		    else{
+			sortie[pixel_x][pixel_y]--;
+			hists[1][sortie[pixel_x][pixel_y]]++;
+		    }
+		}
+	    }
 			
 		
 	}
-	/*free(histo[0]);
-	  free(histo[1]);*/
 	free(histo);
-	/*free(hists[0]);
-	  free(hists[1]);*/
 	free(hists);
 	return sortie;
 }

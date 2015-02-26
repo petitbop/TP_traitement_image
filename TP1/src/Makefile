@@ -42,6 +42,18 @@ compare: etirement egalisation filtrageRetinien create_histogramme contraste
 	./create_histogramme ../couchersoleil.pgm hist_couchersoleil.txt 
 	./create_histogramme ../muscle.pgm hist_muscle.txt 
 	./create_histogramme ../pont.pgm hist_pont.txt
+	./create_histogramme etire_aquitain.pgm hist_etire_aquitain.txt
+	./create_histogramme etire_couchersoleil.pgm hist_etire_couchersoleil.txt
+	./create_histogramme etire_muscle.pgm hist_etire_muscle.txt
+	./create_histogramme etire_pont.pgm hist_etire_pont.txt
+	./create_histogramme egal_aquitain.pgm hist_egal_aquitain.txt 
+	./create_histogramme egal_couchersoleil.pgm hist_egal_couchersoleil.txt
+	./create_histogramme egal_muscle.pgm hist_egal_muscle.txt
+	./create_histogramme egal_pont.pgm hist_egal_pont.txt
+	./create_histogramme fil_aquitain.pgm hist_fil_aquitain.txt
+	./create_histogramme fil_couchersoleil.pgm hist_fil_couchersoleil.txt
+	./create_histogramme fil_muscle.pgm hist_fil_muscle.txt
+	./create_histogramme fil_pont.pgm hist_fil_pont.txt
 	@echo "AQUITAIN \n" 
 	./contraste ../aquitain.pgm
 	@echo "etirement \n" 
@@ -74,6 +86,30 @@ compare: etirement egalisation filtrageRetinien create_histogramme contraste
 	./contraste egal_couchersoleil.pgm
 	@echo "filtrage retinien \n"
 	./contraste fil_couchersoleil.pgm
+
+display_aquitain: compare 
+	display ../aquitain.pgm &
+	display etire_aquitain.pgm &
+	display egal_aquitain.pgm &
+	display fil_aquitain.pgm &
+
+display_couchersoleil: compare  
+	display ../couchersoleil.pgm &
+	display etire_couchersoleil.pgm &
+	display egal_couchersoleil.pgm &
+	display fil_couchersoleil.pgm &
+
+display_muscle: compare  
+	display ../muscle.pgm &
+	display etire_muscle.pgm &
+	display egal_muscle.pgm &
+	display fil_muscle.pgm &
+
+display_pont: compare  
+	display ../pont.pgm &
+	display etire_pont.pgm &
+	display egal_pont.pgm &
+	display fil_pont.pgm &
 
 clean: 
 	rm *.o
