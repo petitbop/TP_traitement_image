@@ -48,7 +48,11 @@ unsigned char** egalise( unsigned char** sortie,  unsigned char** entree, int nl
 			
 		
 	}
+	free(histo[0]);
+	free(histo[1]);
 	free(histo);
+	free(hists[0]);
+	free(hists[1]);
 	free(hists);
 	return sortie;
 }
