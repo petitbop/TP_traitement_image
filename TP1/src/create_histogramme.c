@@ -13,8 +13,7 @@ int main (int ac, char **av){
     if (im1==NULL)  { puts("Lecture image impossible"); exit(1); }
     hist_im = hist(im1,nl,nc);
     ecriture_histogramme(hist_im,&av[2]);
-    free(*im1);
-    free(im1);
+    libere_image(im1);
     free(hist_im[0]);
     free(hist_im[1]);
     free(hist_im);

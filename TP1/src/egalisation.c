@@ -84,12 +84,10 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
   else {
 	  amelioration =(int)av[3];
   }
-	/* Calcul de l'égalisation de l'image (avec ou sans amélioration*/
+	/* Calcul de l'égalisation de l'image (avec ou sans amélioration)*/
   im2=egalise(im2,im1,nl,nc);
 	/* Sauvegarde dans un fichier dont le nom est passe sur la ligne de commande */
   ecritureimagepgm(av[2],im2,nl,nc);
-  free(*im1);
-  free(im1);
-  free(*im2);
-  free(im2);
+  libere_image(im1);
+  libere_image(im2);
 }

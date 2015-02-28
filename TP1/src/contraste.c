@@ -58,6 +58,5 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
   if (im1==NULL)  { puts("Lecture image impossible"); exit(1); }
   contr = contraste(im1,nl,nc);
   printf("contraste de l'image : %f \n", contr);
-  free(*im1);
-  free(im1);
+  libere_image(im1);
 }

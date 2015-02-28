@@ -52,13 +52,10 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
 	/* Lecture d'une image pgm dont le nom est passe sur la ligne de commande */
   im1=lectureimagepgm(av[1],&nl,&nc);
   if (im1==NULL)  { puts("Lecture image impossible"); exit(1); }
-	/* Calcul de son inverse video */
+	/* Calcul de l'étirement de l'image */
   im2=etire(im2,im1,nl,nc);
 	/* Sauvegarde dans un fichier dont le nom est passe sur la ligne de commande */
   ecritureimagepgm(av[2],im2,nl,nc);
-  free(*im1);
-  free(im1);
-  free(*im2);
-  free(im2);
-
+  libere_image(im1);
+  libere_image(im2);
 }

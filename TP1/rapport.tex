@@ -9,8 +9,6 @@
 \usepackage{amsopn}
 \usepackage{fancyhdr}
 \usepackage{amsmath,amssymb}
-%\usepackage{listings}
-%\usepackage{textcomp}
 
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\R}{\mathbb{R}}
@@ -57,11 +55,11 @@
 
 \vspace{5mm}
 
-L'objectif du TP est de comparer l'efficacité de quatre méthodes de réhaussement de contraste et déterminer les avantages et les défauts de chacunes d'entre elles. Afin de générer toutes les images ainsi que les histogramme il faut effectuer la commande \textbf{make compare}. Il est possible de faire afficher l'ensemble des images transformées relatives à une image originale en entrant la commande \textbf{make display\_nomdel'imagededepart} (sans .pgm , ex : \textbf{make display\_aquitain}). Enfin il est possible de vérifier l'état des fuites mémoires (qui doivent être nulles dans notre cas) avec \textbf{make valgrinds}.  
+L'objectif du TP est de comparer l'efficacité de quatre méthodes de réhaussement de contraste et déterminer les avantages et les défauts de chacunes d'entre elles. Afin de générer toutes les images ainsi que les histogrammes il faut effectuer la commande \textbf{make compare}. Il est possible de faire afficher l'ensemble des images transformées relatives à une image originale en entrant la commande \textbf{make display\_nomdel'imagededepart} (sans .pgm , ex : \textbf{make display\_aquitain}). Enfin il est possible de vérifier l'état des fuites mémoires (qui doivent être nulles dans notre cas) avec \textbf{make valgrinds}. Il faut noter que les figures se trouvent dans la section \textbf{Exemple de rendus et d'histogrammes}, la figure 1 étant la figure en haut à gauche (puis on suit l'ordre de lecture habituel). Tous les calculs de contraste ont été effectués avec $N = 5$.
 
 \section{Etirement}
 
-\textbf{étude qualitative}: La $figure 1$ présente l'image aquitain telle quelle était initialement, tandis que la $figure 2$ est l'image aquitain après étirement. On constate que l'image initiale, étant dans des tons très sombre, ne comportait pas de pixel blanc, alors que l'image obtenu contient des pixels ayant tous les niveaux de gris. Cela est cohérent avec l'idée d'étirer l'histogramme: toute la gamme des niveaux de gris est utilisé, le contraste visuel est augmenté. Pour muscle l'image parait plus nette que l'originale mais l'effet n'est asp aussi flagrant que sur aquitain.\\
+\textbf{étude qualitative}: La $figure 1$ présente l'image aquitain telle quelle était initialement, tandis que la $figure 2$ est l'image aquitain après étirement. On constate que l'image initiale, étant dans des tons très sombre, ne comportait pas de pixel blanc, alors que l'image obtenu contient des pixels ayant tous les niveaux de gris. Cela est cohérent avec l'idée d'étirer l'histogramme: toute la gamme des niveaux de gris est utilisé, le contraste visuel est augmenté. Pour muscle l'image parait plus nette que l'originale mais l'effet n'est pas aussi flagrant que sur aquitain.\\
 
 \textbf{étude quantitative}: Le tableau suivant expose la valeur du contraste pour $4$ images avant et après l'étirement d'histogramme.\\
 \begin{center}
@@ -83,7 +81,7 @@ On a bien le résultat escompté pour aquitain: le contraste a double. De même 
 
 \section{Egalisation}
 
-\textbf{étude qualitative}: Les images obtenues après égalisation d'histogramme ont un contraste supérieur. Le constat est flagrant avec l'image egal\_aquitain présenté en $figure 3$, l'image est beaucoup plus claire et on observe énormément de détails comparé à l'image de départ où ne voyait que des pixels noirs ou gris foncé. Pour les autres images comme pont ou coucherdesoleil, une tâche blanche apparait sur l'image, ces dernières se retrouvent éclaircies par rapport à l'image originale et on peut observer plus de détails là où il y avait des zones sombres. Cependant pour pont.pgm les contours des maisons de l'image pont sont entourés de pixel gris foncés contrairement à l'image originale. Ce phénomène n'est pas souhaitable. Pour muscle l'image parait plus nette que l'image originale même si l'effet est assez faible.
+\textbf{étude qualitative}: Les images obtenues après égalisation d'histogramme ont un contraste supérieur. Le constat est flagrant avec l'image egal\_aquitain présenté en $figure 3$, l'image est beaucoup plus claire et on observe énormément de détails comparé à l'image de départ où ne voyait que des pixels noirs ou gris foncé. Pour les autres images comme pont ou coucherdesoleil, une tâche blanche apparait sur l'image, ces dernières se retrouvent éclaircies par rapport à l'image originale et on peut observer plus de détails là où il y avait des zones sombres. Cependant pour pont.pgm les contours des maisons de l'image pont sont entourés de pixels gris foncés contrairement à l'image originale. Ce phénomène n'est pas souhaitable. Pour muscle l'image parait plus nette que l'image originale même si l'effet est assez faible.
 
 \textbf{étude quantitative}: Les tableaux suivants exposent la valeur du contraste pour $4$ images avant et après l'égalisation d'histogramme. Le deuxième tableau concerne l'égalisation aléatoire d'histogramme\\
 
@@ -115,11 +113,10 @@ On a bien le résultat escompté pour aquitain: le contraste a double. De même 
   \end{tabular}
 \end{center}
 
-Avec cette méthode, le contraste est systématiquement augmenté sauf pour l'égalisation normale de couchersoleil (mais l'égalisation aléatoire augmente tout de même son contraste).L'égalisation aléatoire a l'air plus efficace que l'égalisation normale en terme d'amélioration du contraste. Cependant elle apporte des défauts notamment on observe que l'image est bruitée et ce bruitage est d'autant plus important lorsque l'on augmente le nombre d'itérations du tirage aléatoire. Ceci peut s'expliquer simplement par le fait que l'on rajoute à l'image des niveaux de gris qui n'étaient pas forcément présents dans l'image de départ, or tous les niveaux sont maintenant présent en quantité égale. 
+Avec cette méthode, le contraste est systématiquement augmenté sauf pour l'égalisation normale de couchersoleil (mais l'égalisation aléatoire augmente tout de même son contraste). L'égalisation aléatoire a l'air plus efficace que l'égalisation normale en terme d'amélioration du contraste. Cependant elle apporte des défauts notamment on observe que l'image est bruitée et ce bruitage est d'autant plus important lorsque l'on augmente le nombre d'itérations du tirage aléatoire. Ceci peut s'expliquer simplement par le fait que l'on rajoute à l'image des niveaux de gris qui n'étaient pas forcément présents dans l'image de départ, or tous les niveaux sont maintenant présent en quantités égales. Il est donc déconseillé d'utiliser l'aléa avec un trop grand nombre d'itérations, l'image transformée n'est pas traitable.
 \section{Filtrage Rétinien}
 
-\textbf{étude qualitative}: Les images obtenues sont dans des tons plus lumineux, ce qui s'explique par le fait que le filtrage prend en compte les valeurs des pixels voisins pour calculer le niveau de gris d'un pixel donné, et que pour calculer les valeurs des pixels au bord, le programme considère qu'elle est entourée de pixel blanc. Ainsi l'image globale obtenue a plus de blanc. Cependant, le contraste ne semble pas augmenter. Cela est particulièrement visible sur l'image aquitain qui possède initialement un contraste très faible et a beaucoup de pixel noir, et qui après passage du filtre rétinien possède des pixels plus clairs mais toujours dans les mêmes tons. Le niveau de détail de l'image semble être améliorer avec ce filtre néanmoins, ce qui est logique vu que l'on prend en compte les pixels voisins pour calculer la valeur d'un pixel.
-
+\textbf{étude qualitative}: Les images obtenues sont dans des tons plus lumineux, ce qui s'explique par le fait que le filtrage prend en compte les valeurs des pixels voisins pour calculer le niveau de gris d'un pixel donné, et que pour calculer les valeurs des pixels au bord, le programme considère qu'elle est entourée de pixel blanc. Ainsi l'image globale obtenue a plus de blanc. Cependant, le contraste ne semble pas augmenter. Cela est particulièrement visible sur l'image aquitain qui possède initialement un contraste très faible et a beaucoup de pixel noir, et qui après passage du filtre rétinien possède des pixels plus clairs mais toujours dans les mêmes tons. Le niveau de détail de l'image semble être améliorer avec ce filtre néanmoins, ce qui est logique vu que l'on prend en compte les pixels voisins pour calculer la valeur d'un pixel. Pour pont le filtrage rétinien semble être la transformation la plus efficace visuellement.\\
 \textbf{étude quantitative}: Le tableau suivant expose la valeur du contraste pour $4$ images avant et après le filtrage rétinien.\\\\
 \begin{center}
   \begin{tabular}{|l|l|l|l|l|}
@@ -138,6 +135,15 @@ Avec cette méthode, le contraste est systématiquement augmenté sauf pour l'é
 Effectivement, le contraste n'est pas augmenté et est même diminué par cette méthode.
 
 \section{Exemple de rendus et d'histogrammes}
+Ici nous avons mis tous les rendus relatifs à l'image originale aquitain.pgm ; on retrouve d'abord les differentes transformation appliquées à l'image de base puis les histogrammes correspondant à ces dernières.\\
+\includegraphics[scale=0.6]{aquitain.pdf}
+\includegraphics[scale=0.6]{etire_aquitain.pdf}
+\\
+\includegraphics[scale=0.6]{egal_aquitain.pdf}
+\includegraphics[scale=0.6]{egal_alea_aquitain.pdf}
+\\
+\includegraphics[scale=0.6]{fil_aquitain.pdf}
+\\
 \includegraphics[scale=0.6]{hist_aquitain.pdf}
 \includegraphics[scale=0.6]{hist_etire_aquitain.pdf}
 \\
