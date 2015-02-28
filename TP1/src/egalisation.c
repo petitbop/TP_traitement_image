@@ -15,45 +15,47 @@ unsigned char** egalise( unsigned char** sortie,  unsigned char** entree, int nl
 		}
 	}
 	/*amélioration*/
-	srand (time (NULL));
-	int nb_iteration = 100000000;
-	int k;
-	int pixel_x;
-	int pixel_y;
-	int **hists = hist(sortie, nl, nc);
-	for(k = 0 ; k < nb_iteration ; k++){
-	    pixel_x = rand()%nl;
-	    pixel_y = rand()%nc;
-	    if(hists[1][sortie[pixel_x][pixel_y]] > nc*nl/256){
-		hists[1][sortie[pixel_x][pixel_y]]--;
-		if(sortie[pixel_x][pixel_y] == 255){
-		    sortie[pixel_x][pixel_y]--;
-		    hists[1][sortie[pixel_x][pixel_y]]++;
-		}
-		else if (sortie[pixel_x][pixel_y] == 0){
-		    sortie[pixel_x][pixel_y]++;
-		    hists[1][sortie[pixel_x][pixel_y]]++;
-		}
-		else{
-		    if(rand()%2 == 0){
-			sortie[pixel_x][pixel_y]++;
-			hists[1][sortie[pixel_x][pixel_y]]++;
-		    }
-		    else{
-			sortie[pixel_x][pixel_y]--;
-			hists[1][sortie[pixel_x][pixel_y]]++;
-		    }
-		}
-	    }
+	if(amelioration != 0){
+		srand (time (NULL));
+		int nb_iteration = 100000000;
+		int k;
+		int pixel_x;
+		int pixel_y;
+		int **hists = hist(sortie, nl, nc);
+		for(k = 0 ; k < nb_iteration ; k++){
+			pixel_x = rand()%nl;
+			pixel_y = rand()%nc;
+			if(hists[1][sortie[pixel_x][pixel_y]] > nc*nl/256){
+				hists[1][sortie[pixel_x][pixel_y]]--;
+				if(sortie[pixel_x][pixel_y] == 255){
+					sortie[pixel_x][pixel_y]--;
+					hists[1][sortie[pixel_x][pixel_y]]++;
+				}
+				else if (sortie[pixel_x][pixel_y] == 0){
+					sortie[pixel_x][pixel_y]++;
+					hists[1][sortie[pixel_x][pixel_y]]++;
+				}
+				else{
+					if(rand()%2 == 0){
+						sortie[pixel_x][pixel_y]++;
+						hists[1][sortie[pixel_x][pixel_y]]++;
+					}
+					else{
+						sortie[pixel_x][pixel_y]--;
+						hists[1][sortie[pixel_x][pixel_y]]++;
+					}
+				}
+			}
 			
 		
+		}
+		free(hists[0]);
+		free(hists[1]);
+		free(hists);
 	}
 	free(histo[0]);
 	free(histo[1]);
 	free(histo);
-	free(hists[0]);
-	free(hists[1]);
-	free(hists);
 	return sortie;
 }
 
@@ -76,7 +78,13 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
 	/* Lecture d'une image pgm dont le nom est passe sur la ligne de commande */
   im1=lectureimagepgm(av[1],&nl,&nc);
   if (im1==NULL)  { puts("Lecture image impossible"); exit(1); }
-	/* Calcul de son inverse video */
+  if(ac < 4){
+	  amelioration = 0;
+  }
+  else {
+	  amelioration =(int)av[3];
+  }
+	/* Calcul de l'égalisation de l'image (avec ou sans amélioration*/
   im2=egalise(im2,im1,nl,nc);
 	/* Sauvegarde dans un fichier dont le nom est passe sur la ligne de commande */
   ecritureimagepgm(av[2],im2,nl,nc);
