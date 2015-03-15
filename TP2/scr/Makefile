@@ -10,6 +10,9 @@ gaussian: gaussian.o pgm.o fft.o
 convolGaussian: convolGaussian.o pgm.o fft.o
 	gcc $^ -o $@ $(LDFLAGS)
 
+median: median.o pgm.o fft.o
+	gcc $^ -o $@ $(LDFLAGS)
+
 %.o:%.c
 	gcc $(CFLAGS) $<
 
