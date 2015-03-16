@@ -13,6 +13,9 @@ convolGaussian: convolGaussian.o pgm.o fft.o
 median: median.o pgm.o fft.o
 	gcc $^ -o $@ $(LDFLAGS)
 
+adapt: adapt.o pgm.o fft.o 
+	gcc $^ -o $@ $(LDFLAGS)
+
 %.o:%.c
 	gcc $(CFLAGS) $<
 
