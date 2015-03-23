@@ -38,7 +38,7 @@ void median(unsigned char** entree, unsigned char** sortie, int N, int nl, int n
     // la valeur du nouveau point est déterminée par la valeur k
     sortie[i][N] = majHist(histogramme, N);
 
-    for(int j = N; j < nc - N; j++){
+    for(int j = N + 1 ; j < nc - N; j++){
       // supprimer de l'histogramme les valeurs des points de la colonne j-N-1
       // ajouter à l'histogramme les valeurs des points de la colonne j+N
       histogramme = hist(entree, i, j, N, nl, nc);
@@ -54,7 +54,7 @@ void median(unsigned char** entree, unsigned char** sortie, int N, int nl, int n
 		Exemple de code avec Entrees Sortie et transformations simples d'images
 		S'utilise sous la forme  "exemple tangram.pgm res.pgm"
  	*/
-main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le nom du resultat . */
+int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le nom du resultat . */
   int nb,nl,nc, oldnl,oldnc;
   unsigned char **im2=NULL,** im1=NULL;
   unsigned char** im4,** im5, ** im6, ** im7, **im8, **im9,**im10;
@@ -72,9 +72,6 @@ main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le nom du
 
   im4=alloue_image(nl,nc);
   median(im1, im4, N, nl, nc);
-
-
-
 
 	/* Conversion en entier8bits de la partie reelle de la fftinverse, 
 	   Suppresion des 0 qui ont servi a completer en utilisant la fonction crop

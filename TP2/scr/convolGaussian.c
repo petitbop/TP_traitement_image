@@ -2,28 +2,6 @@
 #include "convolGaussian.h"
 #include "math.h"
 
-/*
-void filtrage_horizontale(double ** sortie_re,double **sortie_im,double ** entree_re,double **entree_im, double sigm, int w, int nl,int nc){
-  double tmp = 0;
-  // on parcourt l'image
-  for(int x = 0; x < nl; x++){
-    for(int y = 0; y < nc; y++){
-      	sortie_re[x][y] = 0;
-	sortie_im[x][y] = 0;
-      // on fait la convolution horizontale
-      for(int j = -w; j <= w; j++){
-	// l'image est periodisee
-	int yPrime = (y-j) % nc;
-	tmp = 1/(2*M_PI * pow(sigm, 2))*entree_re[x][yPrime] * exp(-pow(j, 2)/(2*pow(sigm,2)));
-	sortie_re[x][y] += tmp;
-
-	tmp = 1/(2*M_PI * pow(sigm, 2)) * entree_im[x][yPrime] * exp(-pow(j, 2)/(2*pow(sigm,2)));
-	sortie_im[x][y] += tmp;
-      }
-    }
-  }
-}
-*/
 void filtrage_horizontal(double ** entree,double ** sortie, double sigm, int w, int nl,int nc){
   double tmp = 0;
   // on parcourt l'image
@@ -43,29 +21,6 @@ void filtrage_horizontal(double ** entree,double ** sortie, double sigm, int w, 
     }
   }
 }
-
-/*
-void filtrage_vertical(double ** entree_re,double **entree_im, double** sortie_re, double** sortie_im,double sigm, int w, int nl,int nc){
-  double tmp = 0;
-  // on parcourt l'image
-  for(int x = 0; x < nl; x++){
-    for(int y = 0; y < nc; y++){
-        sortie_re[x][y] = 0;
-	sortie_im[x][y] = 0;
-      // on fait la convolution verticale
-      for(int i = -w; i <= w; i++){
-	// l'image est periodisee
-	int xPrime = (x-i) % nl;
-	tmp = 1/(2*M_PI * pow(sigm, 2)) * entree_re[xPrime][y] * exp(-pow(i, 2)/(2*pow(sigm,2)));
-	sortie_re[x][y] += tmp;
-
-	tmp = 1/(2*M_PI * pow(sigm, 2)) * entree_im[xPrime][y] * exp(-pow(i, 2)/(2*pow(sigm,2)));
-	sortie_im[x][y] += tmp;
-      }
-    }
-  }
-}
-*/
 
 void filtrage_vertical(double ** entree, double** sortie,double sigm, int w, int nl,int nc){
   double tmp = 0;
@@ -93,7 +48,7 @@ void filtrage_vertical(double ** entree, double** sortie,double sigm, int w, int
 		Exemple de code avec Entrees Sortie et transformations simples d'images
 		S'utilise sous la forme  "exemple tangram.pgm res.pgm"
  	*/
-main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le nom du resultat . */
+int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le nom du resultat . */
   int nb,nl,nc, oldnl,oldnc;
   unsigned char **im2=NULL,** im1=NULL;
   double** im4,** im5, ** im6, ** im7, **im8, **im9,**im10;
