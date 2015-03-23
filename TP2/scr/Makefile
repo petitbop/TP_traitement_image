@@ -7,6 +7,9 @@ essai2: essai2.o pgm.o fft.o
 gaussian: gaussian.o pgm.o fft.o
 	gcc $^ -o $@ $(LDFLAGS)
 
+convolGaussianSeparable: convolGaussianSeparable.o pgm.o fft.o
+	gcc $^ -o $@ $(LDFLAGS)
+
 convolGaussian: convolGaussian.o pgm.o fft.o
 	gcc $^ -o $@ $(LDFLAGS)
 

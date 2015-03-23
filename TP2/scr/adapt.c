@@ -22,32 +22,11 @@ double sum_GT(double** entree, int i, int j, int nl, int nc){
     double s_x_m1;
     double s_y_p1;
     double s_y_m1;
-    /* if(i <= 0){
-	s_x_m1 = 0;
-    }
-    else {*/
-	s_x_m1 = entree[i - 1][j];
-	/* }
-    if(i >= nl - 1){
-	s_x_p1 = 0;
-    }
-    else {*/
-	s_x_p1 =  entree[i + 1][j];
-	/* }
-    if(j <= 0){
-	s_y_m1 = 0;
-    }
-    else {*/
-	s_y_m1 = entree[i][j - 1];
-	/*}
-    if(j >= nc - 1){
-	s_y_p1 = 0;
-    }
-    else {*/
-	s_y_p1 =  entree[i][j + 1];
-	//}
-	printf("%i %i \n",i,j);
-	printf("%i %i \n",nl,nc);
+    s_x_m1 = entree[i - 1][j];
+    s_x_p1 =  entree[i + 1][j];
+    s_y_m1 = entree[i][j - 1];
+    s_y_p1 =  entree[i][j + 1];
+    printf("%lf \n",entree[i][j-1]);
     return pow(s_x_p1 - s_x_m1,2) + pow(s_y_p1 - s_y_m1,2); 
 }
 
