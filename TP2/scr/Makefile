@@ -19,6 +19,9 @@ median: median.o pgm.o fft.o
 adapt: adapt.o pgm.o fft.o 
 	gcc $^ -o $@ $(LDFLAGS)
 
+bilat: bilat.o pgm.o fft.o 
+	gcc $^ -o $@ $(LDFLAGS)
+
 %.o:%.c
 	gcc $(CFLAGS) $<
 

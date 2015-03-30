@@ -1,54 +1,37 @@
 #include "pgm.h"
-#include "adapt.h"
+#include "bilat.h"
 #include "math.h"
-
 
 void cop(double **entree, double **copy, int nl, int nc){
     for(int i = 0 ; i < nl ; i++){
 	for(int j = 0 ; j < nc ; j++){
 	    copy[i][j] = entree[i][j];
-	    //printf("%lf \n",entree[i][j]);
 	}
     }
 }
 
-double wt(double** entree,int i, int j, int  nl, int nc , double k){
-    //printf("%lf \n",G);
-    return exp(-sum_GT(entree,i,j,nl,nc)/(2*k*k));
+double w_exp(double** entree, int i , int j , int h , int l, double sig1 , double sig2){
+    return exp(-(h*h + l*l)/(2*sig1*sig1))*exp(-(pow(entree[i+h][j+l] - entree[i][j],2))/(2*sig2*sig2));
 }
 
-
-double sum_GT(double** entree, int i, int j, int nl, int nc){
-    double s_x_p1;
-    double s_x_m1;
-    double s_y_p1;
-    double s_y_m1;
-    s_x_m1 = entree[i - 1][j];
-    s_x_p1 =  entree[i + 1][j];
-    s_y_m1 = entree[i][j - 1];
-    s_y_p1 =  entree[i][j + 1];
-    double pow1 = (s_x_p1 - s_x_m1)*(s_x_p1 - s_x_m1);
-    double pow2 = (s_y_p1 - s_y_m1)*(s_y_p1 - s_y_m1);
-    return pow1 + pow2; 
-}
-
-
-void adap_filter(double** entree, int nl,int nc, int t){
+void bilat_filter(double** entree, int nl, int nc, int t){
     double ** copy = alloue_image_double(nl, nc);
     cop(entree,copy,nl,nc);
     double num = 0;
     double denom = 0;
-    double k = 5;
+    double sig1 = 5;
+    double sig2 = 2;
     double sum;
     while(t >= 0){
 	for(int i = 0 ; i < nl ; i++){
 	    for(int j = 0 ; j < nc; j++){
 		//calul dans la fenetre de taille 3
-		for(int h = -1 ; h <= 1 ; h++){
-		    for(int l = -1 ; l <= 1 ; l++){
-			if( h + i >= 1 && j + l >= 1 && h + i < nl - 1 && j + l < nc -1){
-			    num += wt(copy,i+h,j+l,nl,nc,k)*copy[i+h][j+l];
-			    denom += wt(copy,i+h,j+l,nl,nc,k);
+		for(int h = -3*sig1 ; h <= 3*sig1 ; h++){
+		    for(int l = -3*sig2 ; l <= 3*sig2 ; l++){
+			if( h + i >= 0 && j + l >= 0 && h + i < nl && j + l < nc){
+			    sum = w_exp(copy,i,j,h,l,sig1,sig2);
+			    num += sum*copy[i+h][j+l];
+			    denom += sum;
 			}
 		    }
 		}
@@ -62,11 +45,12 @@ void adap_filter(double** entree, int nl,int nc, int t){
 	}
 }
 
+
 int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le nom du resultat . */
   int nb,nl,nc, oldnl,oldnc;
   unsigned char **im2=NULL,** im1=NULL;
   double** im4,** im5, ** im6, ** im7, **im8, **im9,**im10;
-  int nbr_iter = 100;
+  int nbr_iter = 10;
   if (ac < 3) {printf("Usage : %s entree sortie \n",av[0]); exit(1); }
 	/* Lecture d'une image pgm dont le nom est passe sur la ligne de commande */
   im1=lectureimagepgm(av[1],&nl,&nc);
@@ -78,7 +62,7 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
 	    printf("%lf \n",im3[i][j]);
 	}
 	}*/
-  adap_filter(im3,nl,nc,nbr_iter);
+  bilat_filter(im3,nl,nc,nbr_iter);
   
   ecritureimagepgm(av[2],crop(imdouble2uchar(im3,nl,nc),0,0,oldnl,oldnc),oldnl,oldnc);
 }
