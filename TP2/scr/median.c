@@ -1,4 +1,5 @@
 #include "median.h"
+#include "psnr.h"
 #include "pgm.h"
 
 int** hist( unsigned char** entree, int i, int j, int N, int nl, int nc){
@@ -58,25 +59,28 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
   int nb,nl,nc, oldnl,oldnc;
   unsigned char **im2=NULL,** im1=NULL;
   unsigned char** im4,** im5, ** im6, ** im7, **im8, **im9,**im10;
-  int N = 14; /* taille de la fenetre a prendre en consideration lors
+  int N; /* taille de la fenetre a prendre en consideration lors
 		du calcul de la valeur mediane */
    
   
-  if (ac < 3) {printf("Usage : %s entree sortie \n",av[0]); exit(1); }
+  if (ac < 4) {printf("Usage : %s entree sortie taille_fenetre\n",av[0]); exit(1); }
 	/* Lecture d'une image pgm dont le nom est passe sur la ligne de commande */
   im1=lectureimagepgm(av[1],&nl,&nc);
   if (im1==NULL)  { puts("Lecture image impossible"); exit(1); }
 	/* Calcul de son inverse video */
   //double**im3=imuchar2double(im1,nl,nc);
   oldnl=nl; oldnc=nc;
-
+  N = atoi(av[3]);
+  im5=imuchar2double(im1,nl,nc);
   im4=alloue_image(nl,nc);
   median(im1, im4, N, nl, nc);
+  im6=imuchar2double(im4,nl,nc);
 
 	/* Conversion en entier8bits de la partie reelle de la fftinverse, 
 	   Suppresion des 0 qui ont servi a completer en utilisant la fonction crop
 	   Sauvegarde au format pgm de cette image qui doit etre identique a 'linverse video 
 	   car on a realise la suite fftinv(fft(image))*/
+  printf("%s \n PSNR : %lf \n",av[1],psnr(im5,im6,nl,nc));
   ecritureimagepgm(av[2], im4,oldnl,oldnc);
 }
 

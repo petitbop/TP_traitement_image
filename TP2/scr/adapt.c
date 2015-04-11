@@ -1,4 +1,5 @@
 #include "pgm.h"
+#include "psnr.h"
 #include "adapt.h"
 #include "math.h"
 
@@ -7,13 +8,11 @@ void cop(double **entree, double **copy, int nl, int nc){
     for(int i = 0 ; i < nl ; i++){
 	for(int j = 0 ; j < nc ; j++){
 	    copy[i][j] = entree[i][j];
-	    //printf("%lf \n",entree[i][j]);
 	}
     }
 }
 
 double wt(double** entree,int i, int j, int  nl, int nc , double k){
-    //printf("%lf \n",G);
     return exp(-sum_GT(entree,i,j,nl,nc)/(2*k*k));
 }
 
@@ -33,12 +32,12 @@ double sum_GT(double** entree, int i, int j, int nl, int nc){
 }
 
 
-void adap_filter(double** entree, int nl,int nc, int t){
+void adap_filter(double** entree, int nl,int nc, int t, int ki){
     double ** copy = alloue_image_double(nl, nc);
     cop(entree,copy,nl,nc);
     double num = 0;
     double denom = 0;
-    double k = 5;
+    double k = ki;
     double sum;
     while(t >= 0){
 	for(int i = 0 ; i < nl ; i++){
@@ -67,18 +66,19 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
   unsigned char **im2=NULL,** im1=NULL;
   double** im4,** im5, ** im6, ** im7, **im8, **im9,**im10;
   int nbr_iter = 100;
-  if (ac < 3) {printf("Usage : %s entree sortie \n",av[0]); exit(1); }
+  int k;
+  if (ac < 4) {printf("Usage : %s entree sortie k \n",av[0]); exit(1); }
 	/* Lecture d'une image pgm dont le nom est passe sur la ligne de commande */
   im1=lectureimagepgm(av[1],&nl,&nc);
   if (im1==NULL)  { puts("Lecture image impossible"); exit(1); }
   double**im3=imuchar2double(im1,nl,nc);
+  im4=imuchar2double(im1,nl,nc);
   oldnl=nl; oldnc=nc;
-  /*for(int i = 0 ; i < nl ; i++){
-	for(int j = 0 ; j < nc ; j++){
-	    printf("%lf \n",im3[i][j]);
-	}
-	}*/
-  adap_filter(im3,nl,nc,nbr_iter);
+
+  k =  atoi(av[3]);
+
+  adap_filter(im3,nl,nc,nbr_iter,k);
   
+  printf("%s \n PSNR : %lf \n",av[1],psnr(im4,im3,nl,nc));
   ecritureimagepgm(av[2],crop(imdouble2uchar(im3,nl,nc),0,0,oldnl,oldnc),oldnl,oldnc);
 }

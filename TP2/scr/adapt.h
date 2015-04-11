@@ -11,7 +11,7 @@ double wt(double** entree,int i, int j, int  nl, int nc , double k);
 double sum_GT(double** entree, int i, int j, int nl, int nc);
 
 //t correspond au nombre d'itérations de la fonction
-void adap_filter(double** entree, int nl,int nc, int t);
+void adap_filter(double** entree, int nl,int nc, int t, int ki);
 
 
 #endif

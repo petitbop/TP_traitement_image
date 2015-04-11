@@ -3,6 +3,6 @@
 
 double fft_gaussian(double sigm, int i, int j, int nl, int nc);
 
-void gaussian_filter(double ** entree,double **entree_im,int nl,int nc);
+void gaussian_filter(double ** entree,double **entree_im,int nl,int nc, int sig);
 
 #endif

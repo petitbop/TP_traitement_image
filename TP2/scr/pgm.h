@@ -46,8 +46,8 @@ double** padimdforfft(double** im, int* pnl, int* pnc);
 double** padimd(double** im, int nl, int nc, int anl, int anc); 
 double** padimucforfft(unsigned char ** im, int* pnl, int* pnc); 
 double eqm(unsigned char **im1, unsigned char **im2,  int nl, int nc);
-double psnr(unsigned char **im1, unsigned char **im2,  int nl, int nc) ;
-double psnr_double(double** r, double** i, int nl, int nc);
+//double psnr(unsigned char **im1, unsigned char **im2,  int nl, int nc) ;
+//double psnr_double(double** r, double** i, int nl, int nc);
 
 
 double** norme(double** real, double** imag, int nl, int nc);
