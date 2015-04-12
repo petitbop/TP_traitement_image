@@ -23,12 +23,12 @@ void bilat_filter(double** entree, int nl, int nc, int t, int sigm1, int sigm2){
     double sig1 = sigm1;
     double sig2 = sigm2;
     double sum;
-    while(t >= 0){
+    while(t > 0){
 	for(int i = 0 ; i < nl ; i++){
 	    for(int j = 0 ; j < nc; j++){
 		//calul dans la fenetre de taille 3
 		for(int h = -3*sig1 ; h <= 3*sig1 ; h++){
-		    for(int l = -3*sig2 ; l <= 3*sig2 ; l++){
+		    for(int l = -3*sig1 ; l <= 3*sig1 ; l++){
 			if( h + i >= 0 && j + l >= 0 && h + i < nl && j + l < nc){
 			    sum = w_exp(copy,i,j,h,l,sig1,sig2);
 			    num += sum*copy[i+h][j+l];

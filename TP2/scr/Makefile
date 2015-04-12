@@ -1,9 +1,9 @@
 EXEC=gaussian convolGaussianSeparable convolGaussian median adapt bilat
-SIG1=2
-SIG2=15
+SIG1=5
+SIG2=50
 K=5
 N=15
-W=4
+W=10
 CFLAGS=-c -g -std=gnu99
 LDFLAGS=-lm
 
@@ -32,7 +32,6 @@ bilat: bilat.o pgm.o fft.o psnr.o
 
 %.o:%.c
 	gcc $(CFLAGS) $<
-
 
 execbilat: bilat 
 	./bilat ../formes1bb10.pgm bilat_formes1bb10.pgm $(SIG1) $(SIG2)  
@@ -122,6 +121,24 @@ execgaussian: gaussian
 	./gaussian ../formes1c1.pgm gaussian_formes1c1.pgm $(SIG1) $(W) 
 	./gaussian ../formes1pets1.pgm gaussian_formes1pets1.pgm $(SIG1) $(W)  
 	./gaussian ../lacornou.pgm gaussian_lacornou.pgm $(SIG1) $(W) 
+
+execall: execbilat execadapt execmedian execconvolGaussian execconvolGaussianSeparable execgaussian
+
+displaygaussian : execgaussian
+	display gaussian_formes1bb10.pgm &
+	display gaussian_formes1c2.pgm & 
+	display gaussian_formes1pets5.pgm &
+	display gaussian_formes1bb25.pgm &
+	display gaussian_formes1g.pgm &
+	display gaussian_formes1.pgm &
+	display gaussian_formes1bb5.pgm &
+	display gaussian_formes1pets10.pgm &
+	display gaussian_formes1sp.pgm &
+	display gaussian_tangram.pgm &
+	display gaussian_formes1c1.pgm &
+	display gaussian_formes1pets1.pgm &
+	display gaussian_lacornou.pgm &
+
 clean: 
 	rm $(EXEC)
 	rm *.o
