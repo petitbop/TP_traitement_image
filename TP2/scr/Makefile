@@ -1,9 +1,9 @@
 EXEC=gaussian convolGaussianSeparable convolGaussian median adapt bilat
-SIG1=5
+SIG1=10
 SIG2=50
 K=5
 N=15
-W=10
+W=5
 CFLAGS=-c -g -std=gnu99
 LDFLAGS=-lm
 
@@ -108,19 +108,19 @@ execconvolGaussianSeparable: convolGaussianSeparable
 	./convolGaussianSeparable ../lacornou.pgm convolGaussianSeparable_lacornou.pgm $(SIG1)
 
 execgaussian: gaussian
-	./gaussian ../formes1bb10.pgm gaussian_formes1bb10.pgm $(SIG1) $(W)  
-	./gaussian ../formes1c2.pgm gaussian_formes1c2.pgm $(SIG1) $(W) 
-	./gaussian ../formes1pets5.pgm gaussian_formes1pets5.pgm $(SIG1) $(W)  
-	./gaussian ../formes1bb25.pgm gaussian_formes1bb25.pgm $(SIG1) $(W) 
-	./gaussian ../formes1g.pgm gaussian_formes1g.pgm $(SIG1) $(W) 
-	./gaussian ../formes1.pgm gaussian_formes1.pgm $(SIG1) $(W) 
-	./gaussian ../formes1bb5.pgm gaussian_formes1bb5.pgm $(SIG1) $(W) 
-	./gaussian ../formes1pets10.pgm gaussian_formes1pets10.pgm $(SIG1) $(W) 
-	./gaussian ../formes1sp.pgm gaussian_formes1sp.pgm $(SIG1) $(W) 
-	./gaussian ../tangram.pgm gaussian_tangram.pgm $(SIG1) $(W) 
-	./gaussian ../formes1c1.pgm gaussian_formes1c1.pgm $(SIG1) $(W) 
-	./gaussian ../formes1pets1.pgm gaussian_formes1pets1.pgm $(SIG1) $(W)  
-	./gaussian ../lacornou.pgm gaussian_lacornou.pgm $(SIG1) $(W) 
+	./gaussian ../formes1bb10.pgm gaussian_formes1bb10.pgm $(SIG1)   
+	./gaussian ../formes1c2.pgm gaussian_formes1c2.pgm $(SIG1)  
+	./gaussian ../formes1pets5.pgm gaussian_formes1pets5.pgm $(SIG1)   
+	./gaussian ../formes1bb25.pgm gaussian_formes1bb25.pgm $(SIG1)  
+	./gaussian ../formes1g.pgm gaussian_formes1g.pgm $(SIG1)  
+	./gaussian ../formes1.pgm gaussian_formes1.pgm $(SIG1)  
+	./gaussian ../formes1bb5.pgm gaussian_formes1bb5.pgm $(SIG1) 
+	./gaussian ../formes1pets10.pgm gaussian_formes1pets10.pgm $(SIG1) 
+	./gaussian ../formes1sp.pgm gaussian_formes1sp.pgm $(SIG1)  
+	./gaussian ../tangram.pgm gaussian_tangram.pgm $(SIG1)  
+	./gaussian ../formes1c1.pgm gaussian_formes1c1.pgm $(SIG1) 
+	./gaussian ../formes1pets1.pgm gaussian_formes1pets1.pgm $(SIG1) 
+	./gaussian ../lacornou.pgm gaussian_lacornou.pgm $(SIG1)
 
 execall: execbilat execadapt execmedian execconvolGaussian execconvolGaussianSeparable execgaussian
 

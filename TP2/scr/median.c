@@ -33,19 +33,28 @@ int majHist(int** histogramme, int N){
 
 void median(unsigned char** entree, unsigned char** sortie, int N, int nl, int nc){
   int** histogramme;
-  for(int i = N; i < nl - N; i++){
-    // calculer l'histogramme d'une fenêtre 2N+1 * 2N+1 autour du point d'indices i,N
-    histogramme = hist(entree, i, N, N, nl, nc);
-    // la valeur du nouveau point est déterminée par la valeur k
-    sortie[i][N] = majHist(histogramme, N);
+  for(int i = 0; i < nl ; i++){
+    if( i >= N && i < nl - N){
+      // calculer l'histogramme d'une fenêtre 2N+1 * 2N+1 autour du point d'indices i,N
+      histogramme = hist(entree, i, N, N, nl, nc);
+      // la valeur du nouveau point est déterminée par la valeur k
+      sortie[i][N] = majHist(histogramme, N);
+    }
+    else{
+      sortie[i][N] = entree[i][N];
+    }
+    for(int j = 0 ; j < nc ; j++){
+      if(j >= N + 1 && j < nc - N && i >= N && i < nl - N){
+	// supprimer de l'histogramme les valeurs des points de la colonne j-N-1
+	// ajouter à l'histogramme les valeurs des points de la colonne j+N
+	histogramme = hist(entree, i, j, N, nl, nc);
 
-    for(int j = N + 1 ; j < nc - N; j++){
-      // supprimer de l'histogramme les valeurs des points de la colonne j-N-1
-      // ajouter à l'histogramme les valeurs des points de la colonne j+N
-      histogramme = hist(entree, i, j, N, nl, nc);
-
-      // la nouvelle valeur du point k:
-      sortie[i][j] = majHist(histogramme, N);
+	// la nouvelle valeur du point k:
+	sortie[i][j] = majHist(histogramme, N);
+      }
+      else{
+	sortie[i][j] = entree[i][j];
+      }
     }
   }
 }
@@ -58,10 +67,10 @@ void median(unsigned char** entree, unsigned char** sortie, int N, int nl, int n
 int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le nom du resultat . */
   int nb,nl,nc, oldnl,oldnc;
   unsigned char **im2=NULL,** im1=NULL;
-  unsigned char** im4,** im5, ** im6, ** im7, **im8, **im9,**im10;
+  unsigned char** im4, ** im7, **im8, **im9,**im10;
   int N; /* taille de la fenetre a prendre en consideration lors
 		du calcul de la valeur mediane */
-   
+  double** im5,**im6;
   
   if (ac < 4) {printf("Usage : %s entree sortie taille_fenetre\n",av[0]); exit(1); }
 	/* Lecture d'une image pgm dont le nom est passe sur la ligne de commande */

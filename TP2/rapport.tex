@@ -64,9 +64,11 @@ L'objectif du TP est de comparer l'efficacité de plusieurs filtres de mannière
 \section{Filtre Gaussien}
 
 Nous avons traité ce filtre de trois manières différentes : en utilisant la FFT, en procédant directement avec une convolution spatiale discrète et en réalisant deux convolutions spaciales 1D en utilisant le caractère séparable du filtre. L'intérêt d'utiliser la transformée de fourrier dans le cas de la gaussienne (de formule $G(x,y) = \frac{1}{\sqrt{2\pi }\sigma}\exp^{-\frac{x^2 + y^2}{2\sigma^2}}$) est double car on peut montrer que $TF(G(u,v)) = \exp^{-2\pi^2 \sigma^2(u^2 + v^2)}$ (nous n'avons donc pas besoin d'utiliser l'algorithme de la FFT sur la gaussienne) et le coût du calcul de l'image filtrée est en $\Theta(nlog(n))$ avec n le nombre de pixels. Dans le cas d'une convolution spatiale discrète le coût est de $\Theta(nm)$ avec m la taille du masque. Il est donc intéressant d'utiliser la FFT lorsque m $\ggg $ log(n). 
-Comme la gaussienne est une fonction $C^\infty$ à décroissance rapide la convolution avec l'image de départ va régulariser cette dernière, c'est pour cela que les images de sorties sont plus lisses que l'image de départ (effet de flou). On observe par ailleurs que plus la taille du masque est grande plus cet effet de flou est important. Ceci est dû au fait que plus cette taille est grande plus le voisinage conidéré pour chaque pixel est grand (on pondère la valeur du nouveau pixel par celle de ces voisins).\\
+Comme la gaussienne est une fonction $C^\infty$ à décroissance rapide la convolution avec l'image de départ va régulariser cette dernière, c'est pour cela que les images de sorties sont plus lisses que l'image de départ (effet de flou). On observe par ailleurs que plus $\sigma$ est grand plus l'image est floutée. Ceci s'explique par le fait que l'on pondère la valeur d'un nouveau pixel par celle de son voisinage et plus la taille $\sigma$ est grande plus le voisinage considéré est grand.
+
+%On observe par ailleurs que plus la taille du masque est grande plus cet effet de flou est important. Ceci est dû au fait que plus cette taille est grande plus le voisinage conidéré pour chaque pixel est grand (on pondère la valeur du nouveau pixel par celle de ces voisins).\\
 \subsection{FFT}
-Voici quelques résultats pour différentes tailles du masque : \\\\
+Voici quelques résultats pour différentes tailles $\sigma$ : \\\\
 \includegraphics[scale=0.5]{formes1pets5.pdf}\\
 %\includegraphics[scale=0.7]{/scr/images/gaussian/fft/gaussian_formes1pets5_5_2.pdf}
 \subsection{Convolution spaciale}
