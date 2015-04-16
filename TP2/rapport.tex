@@ -2,6 +2,7 @@
 
 \usepackage{amsfonts, amsmath, amssymb, amstext, latexsym}
 \usepackage{graphicx, epsfig}
+\usepackage{caption}
 \usepackage[utf8]{inputenc}
 %\usepackage[french]{babel}
 \usepackage{exscale}
@@ -63,20 +64,115 @@ L'objectif du TP est de comparer l'efficacité de plusieurs filtres de mannière
 -\textbf{make clean}.\\
 \section{Filtre Gaussien}
 
-Nous avons traité ce filtre de trois manières différentes : en utilisant la FFT, en procédant directement avec une convolution spatiale discrète et en réalisant deux convolutions spaciales 1D en utilisant le caractère séparable du filtre. L'intérêt d'utiliser la transformée de fourrier dans le cas de la gaussienne (de formule $G(x,y) = \frac{1}{\sqrt{2\pi }\sigma}\exp^{-\frac{x^2 + y^2}{2\sigma^2}}$) est double car on peut montrer que $TF(G(u,v)) = \exp^{-2\pi^2 \sigma^2(u^2 + v^2)}$ (nous n'avons donc pas besoin d'utiliser l'algorithme de la FFT sur la gaussienne) et le coût du calcul de l'image filtrée est en $\Theta(nlog(n))$ avec n le nombre de pixels. Dans le cas d'une convolution spatiale discrète le coût est de $\Theta(nm)$ avec m la taille du masque. Il est donc intéressant d'utiliser la FFT lorsque m $\ggg $ log(n). 
+Nous avons traité ce filtre de trois manières différentes : en utilisant la FFT, en procédant directement avec une convolution spatiale discrète et en réalisant deux convolutions spaciales 1D en utilisant le caractère séparable du filtre. L'intérêt d'utiliser la transformée de fourrier dans le cas de la gaussienne (de formule $G(x,y) = \frac{1}{\sqrt{2\pi }\sigma}\exp({-\frac{x^2 + y^2}{2\sigma^2}})$) est double car on peut montrer que $TF(G(u,v)) = \exp({-2\pi^2 \sigma^2(u^2 + v^2)})$ (nous n'avons donc pas besoin d'utiliser l'algorithme de la FFT sur la gaussienne) et le coût du calcul de l'image filtrée est en $\Theta(nlog(n))$ avec n le nombre de pixels. Dans le cas d'une convolution spatiale discrète le coût est de $\Theta(nm)$ avec m la taille du masque. Il est donc intéressant d'utiliser la FFT lorsque m $\ggg $ log(n). 
 Comme la gaussienne est une fonction $C^\infty$ à décroissance rapide la convolution avec l'image de départ va régulariser cette dernière, c'est pour cela que les images de sorties sont plus lisses que l'image de départ (effet de flou). On observe par ailleurs que plus $\sigma$ est grand plus l'image est floutée. Ceci s'explique par le fait que l'on pondère la valeur d'un nouveau pixel par celle de son voisinage et plus la taille $\sigma$ est grande plus le voisinage considéré est grand.
 
-%On observe par ailleurs que plus la taille du masque est grande plus cet effet de flou est important. Ceci est dû au fait que plus cette taille est grande plus le voisinage conidéré pour chaque pixel est grand (on pondère la valeur du nouveau pixel par celle de ces voisins).\\
 \subsection{FFT}
 Voici quelques résultats pour différentes tailles $\sigma$ : \\\\
-\includegraphics[scale=0.5]{formes1pets5.pdf}\\
+\begin{center}
+\includegraphics[scale=0.5]{formes1pets5.pdf}
+\includegraphics[scale=0.5]{gaussian_formes1pets5_2.pdf}
+\includegraphics[scale=0.5]{gaussian_formes1pets5_4.pdf}\\
+\includegraphics[scale=0.5]{gaussian_formes1pets5_6.pdf}
+\includegraphics[scale=0.5]{gaussian_formes1pets5_8.pdf}
+\includegraphics[scale=0.5]{gaussian_formes1pets5_10.pdf}
+\end{center}
 %\includegraphics[scale=0.7]{/scr/images/gaussian/fft/gaussian_formes1pets5_5_2.pdf}
-\subsection{Convolution spaciale}
+
+On constate bien sur cet exemple que plus $\sigma$ augmente plus l'image est floutée mais cet effet est plus important sur le bruit que sur les formes (ce qui est normal car une moyenne sur un voisinage d'un bruit va transformer ce dernier plus efficacement que sur les formes ou le voisinage varie peu). On peut donc noter une certaine efficacité à effacer le bruit même s'il persiste encore et que les formes s'en retrouvent aussi déteriorées ($\sigma = 2$ donne un résultat assez satisfaisant).
+\\\\
+Voici le PSNR associé aux différents exemples :\\
+\begin{center}
+  \begin{tabular}{|l|l|l|l|l|l|}
+    \hline
+    & $\sigma = 2$ & $\sigma = 4$ & $\sigma = 6$  & $\sigma = 8$ & $\sigma = 10$ \\
+    \hline
+    gaussien & 38.24 & 30.116290 & 26.442085 & 24.206949 & 22.618504\\
+    \hline
+    speeckle & 22.91 & 22.094201  & 21.243987 & 20.429643 & 19.685113\\
+    \hline
+    poivre et sel & 11.72 & 11.482070 & 11.396079 & 11.324898 & 11.256465\\
+    \hline
+  \end{tabular}
+\end{center}
+Le PSNR a un comportement cohérent car il décroit lorsque $\sigma$ augmente ce qui est logique puisque plus ce dernier est grand plus l'image est floutée et plus l'image filtrée est éloignée de l'image de départ.
 \subsection{Convolution spaciale séparée}
+Une autre manière d'appliquer le filtre gaussien est de passer directement par la convolution spaciale. Ceci rend le calcul plus long ($\Theta(nm)$ avec m la taille du masque)) mais a l'avantage de pouvoir mieux contrôler la taille du voisinage sélectionée pour l'application du masque (c'est le paramètre noté w ($=\sqrt{m}$) qui représente la largeur (ou la longueur) du filtre). On peut remarquer que le filtre gaussien est séparable c'est à dire que $ G(x,y) = \frac{1}{\sqrt{2\pi }\sigma}\exp({-\frac{x^2}{2\sigma^2}})*\exp({-\frac{y^2}{2\sigma^2}}) = u(x)*v(y)$, on peut donc réduire la convolution 2D à deux convolutions 1D en faisaint un filtrage horizontal puis un filtrage vertical (l'image a été périodisée pour garder un voisinage uniforme pour les pixels du bord de l'image). Le coût de l'opération est $\Theta(2*(2*w*n)) = \Theta(4wn) = \Theta(wn)$. \\
+
+Pour $\sigma = 4$ :\\\\
+\includegraphics[scale=0.5]{convolGaussianSeparable_formes1g_4_5.pdf}
+\includegraphics[scale=0.5]{convolGaussianSeparable_formes1g_4_10.pdf}
+\includegraphics[scale=0.5]{convolGaussianSeparable_formes1g_4_15.pdf}
+\includegraphics[scale=0.5]{convolGaussianSeparable_formes1g_4_20.pdf}
+
+\begin{center}
+  \begin{tabular}{|l|l|l|l|l|l|}
+    \hline
+    & $w = 5$ & $w = 10$ & $w = 15$  & $w = 20$ \\
+    \hline
+    gaussien & 19.641360  & 29.896616  & 30.115347  & 30.116289\\
+    \hline
+    speeckle & 17.937598  & 22.058604  & 22.094057  & 22.094201\\
+    \hline
+    poivre et sel & 10.836366 & 11.479171 & 11.482063  & 11.482070\\
+    \hline
+  \end{tabular}
+\end{center}
+On remarque que les PSNR sont identiques à ceux de la FFT lorsque $w >= 20$\\
+
+Pour $\sigma = 8$ : \\\\
+\includegraphics[scale=0.5]{convolGaussianSeparable_formes1sp_8_5.pdf}
+\includegraphics[scale=0.5]{convolGaussianSeparable_formes1sp_8_10.pdf}
+\includegraphics[scale=0.5]{convolGaussianSeparable_formes1sp_8_15.pdf}
+\includegraphics[scale=0.5]{convolGaussianSeparable_formes1sp_8_20.pdf}
+\begin{center}
+  \begin{tabular}{|l|l|l|l|l|l|}
+    \hline
+    & $w = 5$ & $w = 10$ & $w = 15$  & $w = 20$ \\
+    \hline
+    gaussien & 12.337654  & 18.127763   & 23.067826  & 24.129553\\
+    \hline
+    speeckle & 11.957846   & 16.848061  &  19.915799  & 20.396852 \\
+    \hline
+    poivre et sel & 8.597150  &  10.585879 & 11.250320  & 11.321084 \\
+    \hline
+  \end{tabular}
+\end{center}
+pour $\sigma = 8$ les PSNR sont identiques à ceux de la FFT lorsque $w >= 40$\\
+
+Si on fixe $w = 15$ et que l'on fait varier $\sigma$ :
+\begin{center}
+  \begin{tabular}{|l|l|l|l|l|l|}
+    \hline
+    & $\sigma = 2$ & $\sigma = 4$ & $\sigma = 6$  & $\sigma = 8$ & $\sigma = 10$ \\
+    \hline
+    gaussien & 38.237998  & 30.115347  & 26.316742 & 23.067826  & 19.805811\\
+    \hline
+    speeckle & 22.910568  & 22.094057 & 21.205957  &19.915799 & 18.030303 \\
+    \hline
+    poivre et sel & 11.716086  & 11.482063 & 11.392473  &  11.250320 & 10.924719\\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.5]{formes1bb25.pdf}
+\includegraphics[scale=0.5]{convolGaussianSeparable_formes1bb25_2_15.pdf}
+\includegraphics[scale=0.5]{convolGaussianSeparable_formes1bb25_4_15.pdf}\\
+\includegraphics[scale=0.5]{convolGaussianSeparable_formes1bb25_6_15.pdf}
+\includegraphics[scale=0.5]{convolGaussianSeparable_formes1bb25_8_15.pdf}
+\includegraphics[scale=0.5]{convolGaussianSeparable_formes1bb25_10_15.pdf}\\
+\end{center}
+
+On sait que pour le filtre guassien lorsque $w = 3*\sigma$ la courbe est décrite à 99.5\% c'est pour cela que le PSNR varie peu et que le rendu change est quasi identique lorsque w dépasse cette valeur. On retrouve par ailleurs l'effet de lissage décrit précédemment lorsque $\sigma$ augmente (à w fixé) mis à part que la décroissance du PSNR est plus rapide car w est fixe et que la courbe n'est plus décrite à 100\% lorsque $\sigma$ augmente. On remarque encore qualitativement, comme pour la FFT, que le filtrage gaussien est assez efficace pour masquer le bruit même si les formes s'en retrouvent un peu détériorées.
+\subsection{Convolution spaciale}
+Faire une convolution spaciale en 2D ne change rien aux résultats obtenus précédemment, seul le coût de l'algorithme change celui-ci est en $\Theta(w^2n)$ et non plus en $\Theta(wn)$. On peut maintenant comparer le temps que mets chaque algotihme pour s'exécuter sur une image :
+
+
 \section{Filtre Median}
-
+Contrairement au filtre gaussien le filtre médian n'effectue pas une pondération d'un pixel par son voisinage mais lui attribut la valeur médiane de ce dernier. Ce filtre permet donc de bien corriger les imperfections isolées et il n'introduit pas de nouvelle intensité puisque que l'on attribut à chaque pixel une valeur déjà existante. Cependant les contours auront tendance à disparaitre après passage du filtre car ils seront considérés comme des imperfections isolées.
 \section{Filtre Adaptatif}
-
+Le filtre adaptatif a pour but de palier au problème rencontré pour le filtre médian à savoir le filtrege des contours. Le filtrage adaptatif agit fortement sur les zones homogènes et faiblement sur les zones à gradient élevé, de cette manière ci on peut espérer que les contours seront conservés tout en éliminant le bruit. Il faut noter que lorsque $(G_x^t)^2 + (G_y^t)^2$ est trop grand (c'est le cas d'une image bruité avec du bruit blanc car 2 pixels voisins on une valeur totalement différente) il faut que k soit aussi assez grand pour que $\exp(-\frac{(G_x^t)^2 + (G_y^t)^2}{2k^2})$ ne soit pas approximé par 0 (ce qui ferait apparaitre des NaN dans le calcul et l'image de sortie serait noire). 
 \section{Filtre Bilatéral}
-
+Le filtre bilatéral se base sur le même principe que le filtre gaussien, c'est à dire que chaque pixel est pondéré par la valeur de ses voisin, mais il considère en plus la difference des intensités du pixel  central et du pixel du masque. 
 \end{document}	
