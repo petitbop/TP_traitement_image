@@ -68,7 +68,7 @@ Nous avons traité ce filtre de trois manières différentes : en utilisant la F
 Comme la gaussienne est une fonction $C^\infty$ à décroissance rapide la convolution avec l'image de départ va régulariser cette dernière, c'est pour cela que les images de sorties sont plus lisses que l'image de départ (effet de flou). On observe par ailleurs que plus $\sigma$ est grand plus l'image est floutée. Ceci s'explique par le fait que l'on pondère la valeur d'un nouveau pixel par celle de son voisinage et plus la taille $\sigma$ est grande plus le voisinage considéré est grand.
 
 \subsection{FFT}
-Voici quelques résultats pour différentes tailles $\sigma$ : \\\\
+Voici quelques résultats pour différentes tailles $\sigma$ (formes1pets5 originale puis pour $\sigma =$ 2,4,6,8,10) : \\\\
 \begin{center}
 \includegraphics[scale=0.5]{formes1pets5.pdf}
 \includegraphics[scale=0.5]{gaussian_formes1pets5_2.pdf}
@@ -77,7 +77,6 @@ Voici quelques résultats pour différentes tailles $\sigma$ : \\\\
 \includegraphics[scale=0.5]{gaussian_formes1pets5_8.pdf}
 \includegraphics[scale=0.5]{gaussian_formes1pets5_10.pdf}
 \end{center}
-%\includegraphics[scale=0.7]{/scr/images/gaussian/fft/gaussian_formes1pets5_5_2.pdf}
 
 On constate bien sur cet exemple que plus $\sigma$ augmente plus l'image est floutée mais cet effet est plus important sur le bruit que sur les formes (ce qui est normal car une moyenne sur un voisinage d'un bruit va transformer ce dernier plus efficacement que sur les formes ou le voisinage varie peu). On peut donc noter une certaine efficacité à effacer le bruit même s'il persiste encore et que les formes s'en retrouvent aussi déteriorées ($\sigma = 2$ donne un résultat assez satisfaisant).
 \\\\
@@ -99,7 +98,7 @@ Le PSNR a un comportement cohérent car il décroit lorsque $\sigma$ augmente ce
 \subsection{Convolution spaciale séparée}
 Une autre manière d'appliquer le filtre gaussien est de passer directement par la convolution spaciale. Ceci rend le calcul plus long ($\Theta(nm)$ avec m la taille du masque)) mais a l'avantage de pouvoir mieux contrôler la taille du voisinage sélectionée pour l'application du masque (c'est le paramètre noté w ($=\sqrt{m}$) qui représente la largeur (ou la longueur) du filtre). On peut remarquer que le filtre gaussien est séparable c'est à dire que $ G(x,y) = \frac{1}{\sqrt{2\pi }\sigma}\exp({-\frac{x^2}{2\sigma^2}})*\exp({-\frac{y^2}{2\sigma^2}}) = u(x)*v(y)$, on peut donc réduire la convolution 2D à deux convolutions 1D en faisaint un filtrage horizontal puis un filtrage vertical (l'image a été périodisée pour garder un voisinage uniforme pour les pixels du bord de l'image). Le coût de l'opération est $\Theta(2*(2*w*n)) = \Theta(4wn) = \Theta(wn)$. \\
 
-Pour $\sigma = 4$ :\\\\
+Pour $\sigma = 4$ (formes1g pour w = 5,10,15,20):\\\\
 \includegraphics[scale=0.5]{convolGaussianSeparable_formes1g_4_5.pdf}
 \includegraphics[scale=0.5]{convolGaussianSeparable_formes1g_4_10.pdf}
 \includegraphics[scale=0.5]{convolGaussianSeparable_formes1g_4_15.pdf}
@@ -120,7 +119,7 @@ Pour $\sigma = 4$ :\\\\
 \end{center}
 On remarque que les PSNR sont identiques à ceux de la FFT lorsque $w >= 20$\\
 
-Pour $\sigma = 8$ : \\\\
+Pour $\sigma = 8$ (formes1sp pour w=5,10,15,20): \\\\
 \includegraphics[scale=0.5]{convolGaussianSeparable_formes1sp_8_5.pdf}
 \includegraphics[scale=0.5]{convolGaussianSeparable_formes1sp_8_10.pdf}
 \includegraphics[scale=0.5]{convolGaussianSeparable_formes1sp_8_15.pdf}
@@ -155,6 +154,9 @@ Si on fixe $w = 15$ et que l'on fait varier $\sigma$ :
   \end{tabular}
 \end{center}
 
+
+formes1bb25 puis image filtrée avec $\sigma =$ 2,4,6,8,10 :\\
+
 \begin{center}
 \includegraphics[scale=0.5]{formes1bb25.pdf}
 \includegraphics[scale=0.5]{convolGaussianSeparable_formes1bb25_2_15.pdf}
@@ -184,7 +186,8 @@ Faire une convolution spaciale en 2D ne change rien aux résultats obtenus préc
 On remarque que dans tous les cas la FFT est plus rapide que la convolution séparée ce qui peut paraître contradictoire avec ce que nous vu plus haut au niveau de la complexité mais il ne faut pas oublier les facteurs de multiplicité du coût qui entre en jeu ici. Par ailleurs on peut voir que la convolution séparable est beaucoup plus rapide que la convolution 2D (les facteurs de multiplicité étant très proches pour ces deux filtres) ce qui correspond à nos attentes.
 
 \section{Filtre Median}
-Contrairement au filtre gaussien le filtre médian n'effectue pas une pondération d'un pixel par son voisinage mais lui attribut la valeur médiane de ce dernier. Ce filtre permet donc de bien corriger les imperfections isolées et il n'introduit pas de nouvelle intensité puisque que l'on attribut à chaque pixel une valeur déjà existante. Cependant les contours des formes creuses auront tendance à disparaitre après passage du filtre car ils seront considérés comme des imperfections isolées.
+Contrairement au filtre gaussien le filtre médian n'effectue pas une pondération d'un pixel par son voisinage mais lui attribut la valeur médiane de ce dernier. Ce filtre permet donc de bien corriger les imperfections isolées et il n'introduit pas de nouvelle intensité puisque que l'on attribut à chaque pixel une valeur déjà existante. Cependant les contours des formes creuses auront tendance à disparaitre après passage du filtre car ils seront considérés comme des imperfections isolées.\\
+lacornou puis image filtrée pour N = 3,5,10,15,20 :\\
 \begin{center}
 \includegraphics[scale=0.5]{lacornou.pdf}
 \includegraphics[scale=0.5]{median_lacornou_3.pdf}
@@ -193,6 +196,7 @@ Contrairement au filtre gaussien le filtre médian n'effectue pas une pondérati
 \includegraphics[scale=0.5]{median_lacornou_15.pdf}
 \includegraphics[scale=0.5]{median_lacornou_20.pdf}
 \end{center}
+tangram puis image filtrée pour N = 3,5,10,15,20 :\\
 \begin{center}
 \includegraphics[scale=0.5]{tangram.pdf}
 \includegraphics[scale=0.5]{median_tangram_3.pdf}
@@ -201,7 +205,7 @@ Contrairement au filtre gaussien le filtre médian n'effectue pas une pondérati
 \includegraphics[scale=0.5]{median_tangram_15.pdf}
 \includegraphics[scale=0.5]{median_tangram_20.pdf}
 \end{center}
-
+formes1pets5 puis image filtrée pour N = 3,5,10,15,20 :\\
 \begin{center}
 \includegraphics[scale=0.5]{formes1pets5.pdf}
 \includegraphics[scale=0.5]{median_formes1pets5_3.pdf}
@@ -210,15 +214,20 @@ Contrairement au filtre gaussien le filtre médian n'effectue pas une pondérati
 \includegraphics[scale=0.5]{median_formes1pets5_15.pdf}
 \includegraphics[scale=0.5]{median_formes1pets5_20.pdf}
 \end{center}
-
+formes1c1 puis image filtrée pour N = 3 :\\
 \begin{center}
 \includegraphics[scale=0.5]{formes1c1.pdf}
 \includegraphics[scale=0.5]{median_formes1c1_3.pdf}
 \end{center}
-On peut noter que l'algorithme de traite pas les bords de l'images c'est pour cela que l'on retrouve l'image originale sur une bordure de la taille du filtre. Pour tangram et lacornou qui sont deux images régulières et sans bruit on observe que les contours sont d'autant plus rognés que la taille du filtre est grande. l'intérieur des bords à tendance à s'homogénéiser. Néanmoins on constate la grande efficacité du filtre à effacer le bruit avec l'image poivre et sel, ce dernier est totalement effacé à l'intérieur de la fenêtre contrairement au filtrage gaussien ou le bruit était encore présent. Pour formes1c1 on observe bien le phénomène décrit précédemment à savoir que les contours de formes creuses disparaissent après passage du filtre. 
-\section{Filtre Adaptatif}
-Le filtre adaptatif a pour but de palier au problème rencontré pour le filtre médian à savoir le filtrege des contours. Le filtrage adaptatif agit fortement sur les zones homogènes et faiblement sur les zones à gradient élevé, de cette manière ci on peut espérer que les contours seront conservés tout en éliminant le bruit. Il faut noter que lorsque $(G_x^t)^2 + (G_y^t)^2$ est trop grand (c'est le cas d'une image bruité avec du bruit blanc car 2 pixels voisins on une valeur totalement différente) il faut que k soit aussi assez grand pour que $\exp(-\frac{(G_x^t)^2 + (G_y^t)^2}{2k^2})$ ne soit pas approximé par 0 (ce qui ferait apparaitre des NaN dans le calcul et l'image de sortie serait noire). 
 
+\begin{center}
+\includegraphics[scale=1.0]{med_psnr.pdf}\\
+\end{center}
+
+On peut noter que l'algorithme de traite pas les bords de l'images c'est pour cela que l'on retrouve l'image originale sur une bordure de la taille du filtre. Pour tangram et lacornou qui sont deux images régulières et sans bruit on observe que les contours sont d'autant plus rognés que la taille du filtre est grande. l'intérieur des bords à tendance à s'homogénéiser. Néanmoins on constate la grande efficacité du filtre à effacer le bruit avec l'image poivre et sel, ce dernier est totalement effacé à l'intérieur de la fenêtre contrairement au filtrage gaussien ou le bruit était encore présent. Pour formes1c1 on observe bien le phénomène décrit précédemment à savoir que les contours de formes creuses disparaissent après passage du filtre. On constate que le psnr diminue lorsque la taille du filtre augmente, ce qui s'explique par le fait que plus N augmente plus les déformations sont importantes (puisque la médiane aura tendance à changer).
+\section{Filtre Adaptatif}
+Le filtre adaptatif a pour but de palier au problème rencontré pour le filtre médian à savoir le filtrege des contours. Le filtrage adaptatif agit fortement sur les zones homogènes et faiblement sur les zones à gradient élevé, de cette manière ci on peut espérer que les contours seront conservés tout en éliminant le bruit. Il faut noter que lorsque $(G_x^t)^2 + (G_y^t)^2$ est trop grand (c'est le cas d'une image bruité avec du bruit blanc car 2 pixels voisins on une valeur totalement différente) il faut que k soit aussi assez grand pour que $\exp(-\frac{(G_x^t)^2 + (G_y^t)^2}{2k^2})$ ne soit pas approximé par 0 (ce qui ferait apparaitre des NaN dans le calcul et l'image de sortie serait noire). \\
+formes1bb25 puis image filtrée pour k = 5,10,15,20 :\\
 \begin{center}
 \includegraphics[scale=0.5]{formes1bb25.pdf}
 \includegraphics[scale=0.5]{adapt_formes1bb25_5.pdf}
@@ -226,7 +235,7 @@ Le filtre adaptatif a pour but de palier au problème rencontré pour le filtre 
 \includegraphics[scale=0.5]{adapt_formes1bb25_15.pdf}
 \includegraphics[scale=0.5]{adapt_formes1bb25_20.pdf}
 \end{center}
-
+formes1sp puis image filtrée pour k = 5,10,15,20 :\\
 \begin{center}
 \includegraphics[scale=0.5]{formes1sp.pdf}
 \includegraphics[scale=0.5]{adapt_formes1sp_5.pdf}
@@ -234,7 +243,7 @@ Le filtre adaptatif a pour but de palier au problème rencontré pour le filtre 
 \includegraphics[scale=0.5]{adapt_formes1sp_15.pdf}
 \includegraphics[scale=0.5]{adapt_formes1sp_20.pdf}
 \end{center}
-
+lacornou puis image filtrée pour k = 5,10,15,20 :\\
 \begin{center}
 \includegraphics[scale=0.5]{lacornou.pdf}
 \includegraphics[scale=0.5]{adapt_lacornou_5.pdf}
@@ -242,7 +251,7 @@ Le filtre adaptatif a pour but de palier au problème rencontré pour le filtre 
 \includegraphics[scale=0.5]{adapt_lacornou_15.pdf}
 \includegraphics[scale=0.5]{adapt_lacornou_20.pdf}
 \end{center}
-
+tangram puis image filtrée pour k = 5,10,15,20 :\\
 \begin{center}
 \includegraphics[scale=0.5]{tangram.pdf}
 \includegraphics[scale=0.5]{adapt_tangram_5.pdf}
@@ -251,10 +260,14 @@ Le filtre adaptatif a pour but de palier au problème rencontré pour le filtre 
 \includegraphics[scale=0.5]{adapt_tangram_20.pdf}
 \end{center}
 
-On observe que le filtre adaptatif est un bon débruiteur pour un bruit blanc (et pour le speckle) et qu'il conserve bien les formes homogènes. Malheureusement comme on peut le voir sur lacornou et tangram il efface tous niveaux de gris intermédiaire et transforme l'image d'origine en image contenant de grande zones avec le même niveau de gris. Nous perdons donc tous les détails de l'image d'origine. De plus comme pour le filtre médian nous observons cet effet de rognement des contours de l'image lorsque k augmente. Néanmoins on observe bien que le filtre conserve bien les contours (et même celui des formes creuses), comme on peut le voir sur lacornou ou les mats sont toujours présents après passage du filtre (contrairement au filtre médian).    
-\section{Filtre Bilatéral}
-Le filtre bilatéral se base sur le même principe que le filtre gaussien, c'est à dire que chaque pixel est pondéré par la valeur de ses voisin, mais il considère en plus la difference des intensités du pixel  central et du pixel du masque. 
+\begin{center}
+\includegraphics[scale=1.0]{adapt_psnr.pdf}\\
+\end{center}
 
+On observe que le filtre adaptatif est un bon débruiteur pour un bruit blanc (et pour le speckle) et qu'il conserve bien les formes homogènes. Malheureusement comme on peut le voir sur lacornou et tangram il efface tous niveaux de gris intermédiaire et transforme l'image d'origine en image contenant de grande zones avec le même niveau de gris. Nous perdons donc tous les détails de l'image d'origine. De plus comme pour le filtre médian nous observons cet effet de rognement des contours de l'image lorsque k augmente. Néanmoins on observe bien que le filtre conserve bien les contours (et même celui des formes creuses), comme on peut le voir sur lacornou ou les mats sont toujours présents après passage du filtre (contrairement au filtre médian). On constate que le psnr diminue losrque  k augmente ce qui est cohérent avec le fait que plus il est grand moins de zones homogènes de même niveau de gris il y a (mais elles sont plus grandes). Pour des images de bruit blanc le psnr reste à peu près constant, ceci peut s'expliquer par le fait que les images sont constituées de très peu de niveaux de gris.   
+\section{Filtre Bilatéral}
+Le filtre bilatéral se base sur le même principe que le filtre gaussien, c'est à dire que chaque pixel est pondéré par la valeur de ses voisin, mais il considère en plus la difference des intensités du pixel  central et du pixel du masque.\\ 
+formes1g puis image filtrée pour sigma1 = 5,10,15,20 :\\
 \begin{center}
 \includegraphics[scale=0.5]{formes1g.pdf}
 \includegraphics[scale=0.5]{bilat_formes1g_5_50.pdf}
@@ -262,7 +275,7 @@ Le filtre bilatéral se base sur le même principe que le filtre gaussien, c'est
 \includegraphics[scale=0.5]{bilat_formes1g_15_50.pdf}
 \includegraphics[scale=0.5]{bilat_formes1g_20_50.pdf}
 \end{center}
-
+formes1pets5 puis image filtrée pour sigma1 = 5,10,15,20 :\\
 \begin{center}
 \includegraphics[scale=0.5]{formes1pets5.pdf}
 \includegraphics[scale=0.5]{bilat_formes1pets5_5_50.pdf}
@@ -270,7 +283,7 @@ Le filtre bilatéral se base sur le même principe que le filtre gaussien, c'est
 \includegraphics[scale=0.5]{bilat_formes1pets5_15_50.pdf}
 \includegraphics[scale=0.5]{bilat_formes1pets5_20_50.pdf}
 \end{center}
-
+tangram puis image filtrée pour sigma1 = 5,10,15,20 :\\
 \begin{center}
 \includegraphics[scale=0.5]{tangram.pdf}
 \includegraphics[scale=0.5]{bilat_tangram_5_50.pdf}
@@ -278,7 +291,7 @@ Le filtre bilatéral se base sur le même principe que le filtre gaussien, c'est
 \includegraphics[scale=0.5]{bilat_tangram_15_50.pdf}
 \includegraphics[scale=0.5]{bilat_tangram_20_50.pdf}
 \end{center}
-
+lacornou puis image filtrée pour sigma1 = 5,10,15,20 :\\
 \begin{center}
 \includegraphics[scale=0.5]{lacornou.pdf}
 \includegraphics[scale=0.5]{bilat_lacornou_5_50.pdf}
@@ -286,5 +299,10 @@ Le filtre bilatéral se base sur le même principe que le filtre gaussien, c'est
 \includegraphics[scale=0.5]{bilat_lacornou_15_50.pdf}
 \includegraphics[scale=0.5]{bilat_lacornou_20_50.pdf}
 \end{center}
-On constate qualitativement que le filtre bilatéral à peu d'effet sur les images, il homogénéise un peu ces dernières (c'est pour cela qu'il a tendance à débruiter un petit peu les images comme tangram et formes1sp) en introduisant un effet de flou. Néamoins on voit clairement sur poivre et sel que ce filtre n'est pas adapté au débruitage. Le flou est moins accentué qu'après passage du filtre gaussien.
+
+\begin{center}
+\includegraphics[scale=1.0]{bilat_psnr.pdf}\\
+\end{center}
+
+On constate qualitativement que le filtre bilatéral à peu d'effet sur les images, il homogénéise un peu ces dernières (c'est pour cela qu'il a tendance à débruiter un petit peu les images comme tangram et formes1sp) en introduisant un effet de flou. Néamoins on voit clairement sur poivre et sel que ce filtre n'est pas adapté au débruitage. Le flou est moins accentué qu'après passage du filtre gaussien. Le psnr diminue à cause de l'effet de flou provoqué par le filtre.
 \end{document}	
