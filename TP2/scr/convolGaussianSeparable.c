@@ -5,7 +5,8 @@
 
 
 void filtrage_horizontal(double ** entree,double ** sortie, double sigm, int w, int nl,int nc){
-  double tmp = 0;
+  double fac = 1/(2*M_PI *sigm*sigm);
+  double fac2 = 1/(2*sigm*sigm);
   // on parcourt l'image
   for(int x = 0; x < nl; x++){
     for(int y = 0; y < nc; y++){
@@ -17,9 +18,9 @@ void filtrage_horizontal(double ** entree,double ** sortie, double sigm, int w, 
 	if (yPrime < 0){
 	  yPrime += nc;
 	}
-	tmp = 1/(2*M_PI * pow(sigm, 2))*entree[x][yPrime] * exp(-pow(j, 2)/(2*pow(sigm,2)));
-	sortie[x][y] += tmp;
+	sortie[x][y] += entree[x][yPrime] * exp(-j*j*fac2);
       }
+      sortie[x][y] *= fac;
     }
   }
 }
@@ -27,7 +28,7 @@ void filtrage_horizontal(double ** entree,double ** sortie, double sigm, int w, 
 
 
 void filtrage_vertical(double ** entree, double** sortie,double sigm, int w, int nl,int nc){
-  double tmp = 0;
+  double fac2 = 1/(2*sigm*sigm);
   // on parcourt l'image
   for(int x = 0; x < nl; x++){
     for(int y = 0; y < nc; y++){
@@ -40,9 +41,7 @@ void filtrage_vertical(double ** entree, double** sortie,double sigm, int w, int
 	  xPrime += nl;
 	}
 	// la normalisation est faite deux fois sinon
-	tmp = //1/(2*M_PI * pow(sigm, 2)) * 
-	  entree[xPrime][y] * exp(-pow(i, 2)/(2*pow(sigm,2)));
-	sortie[x][y] += tmp;
+	sortie[x][y] += entree[xPrime][y] * exp(-i*i*fac2);
       }
     }
   }
@@ -65,7 +64,7 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
   if (im1==NULL)  { puts("Lecture image impossible"); exit(1); }
 	/* Calcul de son inverse video */
   double**im3=imuchar2double(im1,nl,nc);
-  im7=imuchar2double(im1,nl,nc);
+  // im7=imuchar2double(im1,nl,nc);
   oldnl=nl; oldnc=nc;
 
   sigm = atoi(av[3]);
@@ -73,7 +72,7 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
   w = atoi(av[4]);
 
   /* Creation d'images pour l'application des filtres */
-  im4=alloue_image_double(nl,nc); im5=alloue_image_double(nl,nc); im6=alloue_image_double(nl,nc);
+  im4=alloue_image_double(nl,nc); im5=alloue_image_double(nl,nc);
 
   /* filtrage horizontale applique a l'image im3 */  
   filtrage_horizontal(im3, im4, sigm, w, nl, nc);
@@ -81,7 +80,7 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
   /* filtrage verticale applique au resultat du filtrage horizontale */
   filtrage_vertical(im4, im5, sigm, w, nl, nc);  
 
-  printf("%s \n PSNR : %lf \n",av[1],psnr(im7,im5,nl,nc));
+  printf("%s \n PSNR : %lf \n",av[1],psnr(im3,im5,nl,nc));
   ecritureimagepgm(av[2],crop(imdouble2uchar(im5,nl,nc),0,0,oldnl,oldnc),oldnl,oldnc);
 }
 
