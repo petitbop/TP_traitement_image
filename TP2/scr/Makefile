@@ -122,7 +122,7 @@ execgaussian: gaussian
 	./gaussian ../formes1pets1.pgm gaussian_formes1pets1.pgm $(SIG1) 
 	./gaussian ../lacornou.pgm gaussian_lacornou.pgm $(SIG1)
 
-execall: execbilat execadapt execmedian execconvolGaussian execconvolGaussianSeparable execgaussian
+execall: execmedian execconvolGaussian execconvolGaussianSeparable execgaussian execbilat execadapt 
 
 displaygaussian : execgaussian
 	display gaussian_formes1bb10.pgm &
