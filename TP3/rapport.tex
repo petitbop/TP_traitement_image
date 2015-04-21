@@ -60,34 +60,50 @@ L'objectif de ce TP est de comparer deux méthodes de détection de contour d'un
 
 	\begin{figure}[!ht]
         \begin{center}
-           \includegraphics[width=0.7]{formes1c1.pgm} 
+           \includegraphics[width=0.4\textwidth]{formes1c1.png} 
            \caption{contour externe}
         \end{center}
     \end{figure}
 
 	\begin{figure}[!ht]
         \begin{center}
-           \includegraphics[width=0.7]{formes1c2.pgm} 
+           \includegraphics[width=0.4\textwidth]{formes1c2.pdf} 
            \caption{contour interne}
         \end{center}
     \end{figure}
 
-Nous testerons aussi nos programmes sur les images $tangram.pgm$ et $lacornou.pgm$, cette dernière étant bien plus compliqué.
+Nous testerons aussi nos programmes sur les images $tangram.pdf$ et $lacornou.pdf$, cette dernière étant bien plus compliqué.
 
  	\begin{figure}[!ht]
         \begin{center}
-           \includegraphics[width=0.7]{formes1c1.pgm} 
-           \caption{tangram.pgm}
+           \includegraphics[width=0.4\textwidth]{formes1c1.pdf} 
+           \caption{tangram.pdf}
         \end{center}
     \end{figure}
 
 	\begin{figure}[!ht]
         \begin{center}
-           \includegraphics[width=0.7]{formes1c2.pgm} 
-           \caption{lacornou.pgm}
+           \includegraphics[width=0.4\textwidth]{formes1c2.pdf} 
+           \caption{lacornou.pdf}
         \end{center}
     \end{figure}
 
+Pour compiler nos fichiers sources avec le makefile, il suffit de taper:
+-make gradient
+-make gradNaif
+-make laplacien
+-make laplacienDoG
+-make laplacienCouronne
+
+Pour exécuter nos programmes sur les images proposées, il suffit de placer les images dans un répertoire parent appeler img puis de lancer les commandes
+-make execGradPrewitt
+-make execGradSobel
+-make execGradNaif
+-make execLaplacienDoG
+-make execLaplacien1
+-make execLaplacien2
+-make execLaplacien3
+-make execLaplacienCouronne
 
 \section{Détection par gradient}
 
@@ -97,37 +113,69 @@ Cette détection de contour est obtenu en calculant le gradient de notre image, 
 
 	\begin{figure}[!ht]
         \begin{center}
-           \includegraphics[width=0.7]{formes1sp.pgm} 
+           \includegraphics[width=0.4\textwidth]{formes1sp.pdf} 
            \caption{image ayant un bruit multiplicatif de type speckle}
         \end{center}
     \end{figure}
 
 	\begin{figure}[!ht]
         \begin{center}
-           \includegraphics[width=0.7]{gradNaif_formes1bb5Seuil250.pgm} 
+           \includegraphics[width=0.4\textwidth]{gradNaif_formes1bb5Seuil250.pdf} 
            \caption{image ayant un bruit multiplicatif de type speckle}
         \end{center}
     \end{figure}
 
 	\begin{figure}[!ht]
         \begin{center}
-           \includegraphics[width=0.7]{gradNaif_formes1bb5Seuil680.pgm} 
+           \includegraphics[width=0.4\textwidth]{gradNaif_formes1bb5Seuil680.pdf} 
            \caption{image ayant un bruit multiplicatif de type speckle}
         \end{center}
     \end{figure}
 
 On constate qu'en identifiant les points ayant un gradient supérieur à $250$ comme point de contour, le programme identifie bien la forme principale des différents objets de l'image mais il interprète l'intérieur des objets aussi comme des contours. En augmentant la valeur du seuil à 680, on constate que le seuil est trop grand car même les points qui sont réellement des contours tendent à disparaitre. En augmentant encore le seuil, c'est la totalité de la forme qui disparait. Cette méthode n'est donc pas bonne car le programme n'est pas capable de distinguer le contour de l'intérieur de l'objet.
 
-\subsection{gradient Prewitt}
-Cette fois-ci, on supprime les non maxima et on fait un seuillage par hystérésis en utilisant le gradient de Prewitt.
-
-\section{Détection par Laplacien}
-
-On utilise la détection de contour sur l'image $formes1bb25.pgm$. Si l'on prend $\sigma_1=10$ et $\sigma_2=6.25$(le rapport des $2$ faisant bien $1.6$), on obtient
+\subsection{gradients Prewitt et Sobel}
+Cette fois-ci, on supprime les non maxima et on fait un seuillage par hystérésis en utilisant les gradient de Prewitt ou de Sobel. On constate que les contours de l'objet sont reconnus, mais que même l'intérieur de l'objet est cependant considéré comme un contour.
 
 	\begin{figure}[!ht]
         \begin{center}
-           \includegraphics[width=0.7]{laplacien_formes1bb25-10-625.pgm} 
+           \includegraphics[width=0.4\textwidth]{gradientSobel_formes1bb25-500-20.pdf} 
+           \caption{seuilMax = 500 et seuilMin = 20}
+        \end{center}
+    \end{figure}
+
+Pour l'image tangram, les formes sont reconnus et en parties colorié, mais on remarque cependant quelque chose de positif: l'intérieur du triangle. A l'endroit où il y a un léger renfoncement dans l'image initiale, l'image obtenu change de couleur. Cela signifie que notre programme reconnait un contour délimitant une autre zone à l'intérieur d'un contour malgré le fait qu'il affiche l'intérieur des surfaces comme leurs contours.
+	\begin{figure}[!ht]
+        \begin{center}
+           \includegraphics[width=0.4\textwidth]{gradientSobel_tangram-400-20.pdf} 
+           \caption{seuilMax = 400 et seuilMin = 20}
+        \end{center}
+    \end{figure}
+
+Pour une image plus complexe comme la cornou, avec $500$ et $20$ pour seuil, les contours sont bien soulignés. On pourrait utiliser cette méthode pour réhausser les contours dans une image.
+
+	\begin{figure}[!ht]
+        \begin{center}
+           \includegraphics[width=0.4\textwidth]{gradientSobel_lacornou-500-20.pdf} 
+           \caption{seuilMax = 500 et seuilMin = 20}
+        \end{center}
+    \end{figure}
+
+\section{Détection par Laplacien}
+
+\subsection{Lissage}
+
+Nous avons convolué l'image initiale avec les $3$ matrices de laplacien proposées dans l'énoncé. Les images obtenus ne permettent pas de reconnaitre les formes initiales. 
+
+\subsection{difference of Gaussian}
+
+Dans cette partie, nous calculons la transformée de Fourier de notre image, nous la multiplions avec la transformée de Fourier de la différence de deux filtres Gaussiens, puis nous cherchons les passages par zéro du laplacien obtenue. 
+
+On utilise la détection de contour sur l'image $formes1bb25.pdf$. Si l'on prend $\sigma_1=10$ et $\sigma_2=6.25$(le rapport des $2$ faisant bien $1.6$), on obtient
+
+	\begin{figure}[!ht]
+        \begin{center}
+           \includegraphics[width=0.4\textwidth]{laplacien_formes1bb25-10-625.pdf} 
            \caption{laplacien avec 10 et 6.25 pour valeur de filtre}
         \end{center}
     \end{figure}
@@ -138,29 +186,29 @@ Avec comme paramètre des filtres lors de la différence de gaussienne $\sigma_1
 
 	\begin{figure}[!ht]
         \begin{center}
-           \includegraphics[width=0.7]{laplacien_formes1bb25-30-1875.pgm} 
+           \includegraphics[width=0.4\textwidth]{laplacien_formes1bb25-30-1875.pdf} 
            \caption{laplacien avec 30 et 18.75 pour valeur de filtre}
         \end{center}
     \end{figure}
 
-Les contours sont très apparents mais plus arrondis que l'image originale, cela est notamment très visible sur le rectangle en bas. Les traits un peu "tremblants" de la figure au milieu en haut dans l'image initiale apparaissent ici très courbés. La figure de droite est devenu un rond. Par rapport au cas précédent, les contours sont plus arrondis, et donc moins fidèle à la réalité, mais les contours superflues des bords ont disparu. 
+Les contours sont très apparents mais plus arrondis que l'image originale, cela est notamment très visible sur le rectangle en bas. Les traits un peu "tremblants" de la figure au milieu en haut dans l'image initiale apparaissent ici très courbés. La figure de droite est devenu un rond. Par rapport au cas précédent, les contours sont plus arrondis, et donc moins fidèle à la réalité, mais les contours superflus des bords ont disparu. 
 
 Pour l'image tangram, avec $\sigma_1=5$ et $\sigma_2=3.125$:
 
 	\begin{figure}[!ht]
         \begin{center}
-           \includegraphics[width=0.7]{laplacien_tangram-5-3125.pgm} 
+           \includegraphics[width=0.4\textwidth]{laplacien_tangram-5-3125.pdf} 
            \caption{laplacien avec 5 et 3.125 pour valeur de filtre}
         \end{center}
     \end{figure}
 
-Les triangles initiaux sont reconnus par le programme, ainsi que le petit effet de relief qu'il y a en chacun d'eux. Cependant, de nombreux contours d'objets qui n'étaient pas dans l'image initiale apparaissent, comme dans les cas précédents. Le coté gauche à l'origine vide est alors remplie par des objets.
+Les triangles initiaux sont reconnus par le programme, ainsi que le petit effet de relief qu'il y a en chacun d'eux. Cependant, de nombreux contours d'objets qui n'étaient pas dans l'image initiale apparaissent, comme dans les cas précédents. Le côté gauche à l'origine vide est alors remplie par des objets.
 
 Si l'on augmente les valeurs des filtres, $\sigma_1=12$ et $\sigma_2=7.5$, on obtient:
 
 	\begin{figure}[!ht]
         \begin{center}
-           \includegraphics[width=0.7]{laplacien_tangram-12-7-5.pgm} 
+           \includegraphics[width=0.4\textwidth]{laplacien_tangram-12-7-5.pdf} 
            \caption{laplacien avec 12 et 7.5 pour valeur de filtre}
         \end{center}
     \end{figure}
@@ -171,10 +219,35 @@ Pour l'image lacornou, en prenant $\sigma_1=8$ et $\sigma_2=5$
 
 	\begin{figure}[!ht]
         \begin{center}
-           \includegraphics[width=0.7]{laplacien_lacornou-8-5.pgm} 
+           \includegraphics[width=0.4\textwidth]{laplacien_lacornou-8-5.pdf} 
            \caption{laplacien avec 8 et 5 pour valeur de filtre}
         \end{center}
     \end{figure}
 
 On constate que pour une image avec ce niveau de détail, notre programme ne fournit pas des contours satisfaisant.
+
+\subsection{Couronne}
+
+Notre couronne est composée de deux carrés concentriques. Nous calculons la transformée de Fourier de notre image, puis nous mettons à $0$ les valeurs ne se situant entre les deux couronnes.
+
+En appliquant notre filtre a l'image $bb5$ avec pour valeur $R2=20$ et $R1=10$, nous obtenons l'image
+
+	\begin{figure}[!ht]
+        \begin{center}
+           \includegraphics[width=0.4\textwidth]{laplacienCouronne_formes1bb5R1-10-R2-20.pdf} 
+           \caption{laplacien avec R2 de 20 et R1 de 10}
+        \end{center}
+    \end{figure}
+
+Pour l'image tangram, nous reconnaissons bien les triangles sur la partie avec leurs renfoncements en leurs centres.
+
+	\begin{figure}[!ht]
+        \begin{center}
+           \includegraphics[width=0.4\textwidth]{laplacienCouronne_tangramR1-10-R2-20.pdf} 
+           \caption{laplacien avec R2 de 20 et R1 de 10}
+        \end{center}
+    \end{figure}
+
+Sur l'ensemble des figures testés, le rapport $R2=2R1$ semble fonctionner le mieux.
+
 \end{document}

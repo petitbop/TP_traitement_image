@@ -1,28 +1,25 @@
 #include "pgm.h"
 #include "gradNaif.h"
 
+
 void convol(double ** entree, double** sortie, int** filtre, int w, int nl,int nc){
-  double tmp = 0;
   // on parcourt l'image
   for(int x = 0; x < nl; x++){
     for(int y = 0; y < nc; y++){
       sortie[x][y] = 0;
-      // on fait la convolution
-      for(int i = -w/2; i <= w/2; i++){
-	for(int j = -w/2; j <= w/2; j++){
-	  // l'image est periodisee
-	  int xPrime = (x+i) % nl;
+      for(int i = 0; i <= 2; i++){
+	for(int j = 0; j <= 2; j++){
+	  int xPrime = (x-i) % nl;
 	  if (xPrime < 0){
 	    xPrime += nl;
 	  }
-	  int yPrime = (y+j) % nc;
+	  int yPrime = (y-j) % nc;
 	  if (yPrime < 0){
 	    yPrime += nc;
 	  }
-	  tmp = filtre[i+1][j+1] * entree[xPrime][yPrime]; //bidouille immonde
-	  sortie[x][y] += tmp;
+	  sortie[x][y] += entree[xPrime][yPrime]*filtre[i][j];
 	}
-      }
+      }    
     }
   }
 }
@@ -40,6 +37,20 @@ void seuillage(double** G, unsigned char** contour, int nl, int nc, double seuil
   }
 }
 
+void trouveMaxe(double** GX, double** GY, unsigned char** contour, int nl, int nc){
+  for(int i = 1; i < nl-1; i++){
+    for(int j = 1; j < nc-1; j++){
+      if (GX[i][j]+GY[i][j] == 0){
+	contour[i][j] = 0;
+      }
+      else{
+	contour[i][j] = 255;
+      }
+    }
+  }
+}
+
+
 double norm(double x, double y){
   return sqrt(x*x + y*y);
 }
@@ -52,8 +63,19 @@ void normMatrix(double ** MX, double** MY, double ** M, int nl, int nc){
   }
 }
 
+double average(double** M, int nl, int nc){
+  double res = 0;
+  for(int i = 0; i < nl; i++){
+    for(int j = 0; j < nc; j++){
+      res = res + M[i][j];
+    }
+  }
+  res = res/(nl*nc);
+  return res;
+}
+
 int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le nom du resultat . */
-  double seuil = 250; // varie selon l'image...
+  double seuil = 400; // varie selon l'image...
   int nb,nl,nc, oldnl,oldnc;
   int w = 3;
   int** filtrePrewitt;
@@ -145,9 +167,10 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
 
   // seuillage
   seuillage(G, im2, nl, nc, seuil);
+  //trouveMaxe(GX, GY, im2, nl, nc);
 
-  //double res = average(G, nl, nc);
-  //printf("%lf \n", res);
+  double res = average(G, nl, nc);
+  printf("%lf \n", res);
 
   /* Sauvegarde dans un fichier dont le nom est passe sur la ligne de commande */
   ecritureimagepgm(av[2],im2,nl,nc);

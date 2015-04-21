@@ -2,27 +2,23 @@
 #include "gradient.h"
 
 void convol(double ** entree, double** sortie, int** filtre, int w, int nl,int nc){
-  double tmp = 0;
   // on parcourt l'image
   for(int x = 0; x < nl; x++){
     for(int y = 0; y < nc; y++){
       sortie[x][y] = 0;
-      // on fait la convolution
-      for(int i = -w/2; i <= w/2; i++){
-	for(int j = -w/2; j <= w/2; j++){
-	  // l'image est periodisee
-	  int xPrime = (x+i) % nl;
+      for(int i = 0; i <= 2; i++){
+	for(int j = 0; j <= 2; j++){
+	  int xPrime = (x-i) % nl;
 	  if (xPrime < 0){
 	    xPrime += nl;
 	  }
-	  int yPrime = (y+j) % nc;
+	  int yPrime = (y-j) % nc;
 	  if (yPrime < 0){
 	    yPrime += nc;
 	  }
-	  tmp = filtre[i+1][j+1] * entree[xPrime][yPrime]; //bidouille immonde
-	  sortie[x][y] += tmp;
+	  sortie[x][y] += entree[xPrime][yPrime]*filtre[i][j];
 	}
-      }
+      }    
     }
   }
 }
@@ -80,7 +76,7 @@ void supMaxima(double** GX, double** GY, double** G, unsigned char** contour, in
 void seuillage(double** G, unsigned char** contour, int nl, int nc, double seuilMin, double seuilMax){
   for(int i = 1; i < nl-1; i++){
     for(int j = 1; j < nc-1; j++){
-      if(contour[i][j] = 255){ // on est dans un potentiel contour
+      if(contour[i][j] = 120){ // on est dans un potentiel contour
 	if(G[i][j] > seuilMax){
 	  contour[i][j] = 255;
 	}
@@ -127,6 +123,7 @@ double average(double** M, int nl, int nc){
 
 
 int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le nom du resultat . */
+  int Sobel;
   double seuilMax = 500; // varie selon l'image...
   double seuilMin = 20; // varie selon l'image...
   int nb,nl,nc, oldnl,oldnc;
@@ -204,7 +201,10 @@ int main (int ac, char **av) {  /* av[1] contient le nom de l'image, av[2] le no
   // Calcul de la norme du gradient et des ses composantes
   GX = alloue_image_double(nl, nc);
   GY = alloue_image_double(nl, nc);
-  if(av[3] = 0){
+
+  Sobel = atoi(av[3]);
+
+  if(Sobel == 0){
   convol(im3, GX, filtrePrewitt, w, nl, nc); 
   convol(im3, GY, filtrePrewittTranspose, w, nl, nc); 
   }
